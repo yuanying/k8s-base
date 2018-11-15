@@ -1,0 +1,5 @@
+commonLabels:
+  app: coredns
+resources:
+- coredns.yaml
+- coredns-autoscaler.yaml
