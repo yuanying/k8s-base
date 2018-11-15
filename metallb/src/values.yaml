@@ -1,0 +1,36 @@
+configInline:
+  address-pools:
+  - name: default
+    protocol: layer2
+    addresses:
+    - 192.168.1.190-192.168.1.254
+
+# controller contains configuration specific to the MetalLB cluster
+# controller.
+controller:
+  image:
+    repository: metallb/controller
+    tag: v0.7.3
+    pullPolicy: IfNotPresent
+  resources:
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
+
+# speaker contains configuration specific to the MetalLB speaker
+# daemonset.
+speaker:
+  image:
+    repository: metallb/speaker
+    tag: v0.7.3
+    pullPolicy: IfNotPresent
+  resources:
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi

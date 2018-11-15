@@ -1,0 +1,273 @@
+---
+# Source: metallb/templates/config.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mlb0-metallb
+  labels:
+    heritage: "Tiller"
+    release: "mlb0"
+    chart: metallb-0.8.0
+    app: metallb
+data:
+  config: |
+    address-pools:
+    - addresses:
+      - 192.168.1.190-192.168.1.254
+      name: default
+      protocol: layer2
+
+
+---
+# Source: metallb/templates/service-accounts.yaml
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mlb0-metallb-controller
+  labels:
+    heritage: "Tiller"
+    release: "mlb0"
+    chart: metallb-0.8.0
+    app: metallb
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mlb0-metallb-speaker
+  labels:
+    heritage: "Tiller"
+    release: "mlb0"
+    chart: metallb-0.8.0
+    app: metallb
+
+---
+# Source: metallb/templates/rbac.yaml
+# Roles
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: mlb0-metallb:controller
+  labels:
+    heritage: "Tiller"
+    release: "mlb0"
+    chart: metallb-0.8.0
+    app: metallb
+rules:
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list", "watch", "update"]
+- apiGroups: [""]
+  resources: ["services/status"]
+  verbs: ["update"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: mlb0-metallb:speaker
+  labels:
+    heritage: "Tiller"
+    release: "mlb0"
+    chart: metallb-0.8.0
+    app: metallb
+rules:
+- apiGroups: [""]
+  resources: ["services", "endpoints", "nodes"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: mlb0-metallb-config-watcher
+  labels:
+    heritage: "Tiller"
+    release: "mlb0"
+    chart: metallb-0.8.0
+    app: metallb
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create"]
+---
+
+## Role bindings
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: mlb0-metallb:controller
+  labels:
+    heritage: "Tiller"
+    release: "mlb0"
+    chart: metallb-0.8.0
+    app: metallb
+subjects:
+- kind: ServiceAccount
+  name: mlb0-metallb-controller
+  namespace: metallb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: mlb0-metallb:controller
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: mlb0-metallb:speaker
+  labels:
+    heritage: "Tiller"
+    release: "mlb0"
+    chart: metallb-0.8.0
+    app: metallb
+subjects:
+- kind: ServiceAccount
+  name: mlb0-metallb-speaker
+  namespace: metallb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: mlb0-metallb:speaker
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: mlb0-metallb-config-watcher
+  labels:
+    heritage: "Tiller"
+    release: "mlb0"
+    chart: metallb-0.8.0
+    app: metallb
+subjects:
+- kind: ServiceAccount
+  name: mlb0-metallb-controller
+- kind: ServiceAccount
+  name: mlb0-metallb-speaker
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: mlb0-metallb-config-watcher
+---
+# Source: metallb/templates/speaker.yaml
+apiVersion: apps/v1beta2
+kind: DaemonSet
+metadata:
+  name: mlb0-metallb-speaker
+  labels:
+    heritage: "Tiller"
+    release: "mlb0"
+    chart: metallb-0.8.0
+    app: metallb
+    component: speaker
+spec:
+  selector:
+    matchLabels:
+      app: metallb
+      component: speaker
+      release: "mlb0"
+  template:
+    metadata:
+      labels:
+        heritage: "Tiller"
+        release: "mlb0"
+        chart: metallb-0.8.0
+        app: metallb
+        component: speaker
+    spec:
+      serviceAccountName: mlb0-metallb-speaker
+      terminationGracePeriodSeconds: 0
+      hostNetwork: true
+      containers:
+      - name: speaker
+        image: metallb/speaker:v0.7.3
+        imagePullPolicy: IfNotPresent
+        args:
+        - --port=7472
+        - --config=mlb0-metallb
+        env:
+        - name: METALLB_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        ports:
+        - name: monitoring
+          containerPort: 7472
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - all
+            add:
+            - net_raw
+
+---
+# Source: metallb/templates/controller.yaml
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: mlb0-metallb-controller
+  labels:
+    heritage: "Tiller"
+    release: "mlb0"
+    chart: metallb-0.8.0
+    app: metallb
+    component: controller
+spec:
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: metallb
+      component: controller
+      release: "mlb0"
+  template:
+    metadata:
+      labels:
+        heritage: "Tiller"
+        release: "mlb0"
+        chart: metallb-0.8.0
+        app: metallb
+        component: controller
+    spec:
+      serviceAccountName: mlb0-metallb-controller
+      terminationGracePeriodSeconds: 0
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534 # nobody
+      containers:
+      - name: controller
+        image: metallb/controller:v0.7.3
+        imagePullPolicy: IfNotPresent
+        args:
+        - --port=7472
+        - --config=mlb0-metallb
+        ports:
+        - name: monitoring
+          containerPort: 7472
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - all
+          readOnlyRootFilesystem: true
