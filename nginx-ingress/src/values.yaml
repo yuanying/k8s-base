@@ -1,0 +1,32 @@
+---
+controller:
+  kind: Deployment
+  service:
+    type: LoadBalancer
+    loadBalancerIP: "192.168.1.200"
+  stats:
+    enabled: true
+  # config:
+  #   proxy-real-ip-cidr: "192.168.1.0/24"
+  image:
+    tag: "0.20.0"
+
+  resources:
+   limits:
+     cpu: 100m
+     memory: 64Mi
+   requests:
+     cpu: 100m
+     memory: 64Mi
+
+defaultBackend:
+  resources:
+    limits:
+      cpu: 10m
+      memory: 20Mi
+    requests:
+      cpu: 10m
+      memory: 20Mi
+
+rbac:
+  create: true
