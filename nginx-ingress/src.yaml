@@ -406,7 +406,7 @@ spec:
         - name: nginx-ingress-default-backend
           image: "k8s.gcr.io/defaultbackend:1.4"
           imagePullPolicy: "IfNotPresent"
-          args:
+          # args:
           livenessProbe:
             httpGet:
               path: /healthz
