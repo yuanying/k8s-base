@@ -26,7 +26,7 @@ spec:
         beta.kubernetes.io/arch: amd64
         dedicated: nfs
       tolerations:
-      - operator: Exists
+      - operator: Equal
         effect: NoSchedule
         key: dedicated
         value: nfs
