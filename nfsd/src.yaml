@@ -40,8 +40,9 @@ spec:
           limits:
             memory: "256Mi"
         securityContext:
-          capabilities:
-            add: ["SYS_ADMIN", "SETPCAP"]
+          privileged: true
+          # capabilities:
+          #   add: ["SYS_ADMIN", "SETPCAP"]
         env:
         - name: SHARED_DIRECTORY
           value: '/export'
