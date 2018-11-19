@@ -1,0 +1,4 @@
+namespace: nfsd
+resources:
+- namespace.yaml
+- src.yaml

@@ -1,0 +1,54 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nfsd
+  labels:
+    app: nfsd
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nfsd
+  labels:
+    app: nfsd
+spec:
+  selector:
+    matchLabels:
+      app: nfsd
+  template:
+    metadata:
+      labels:
+        app: nfsd
+    spec:
+      hostNetwork: true
+      nodeSelector:
+        beta.kubernetes.io/arch: amd64
+        dedicated: nfs
+      tolerations:
+      - operator: Exists
+        effect: NoSchedule
+        key: dedicated
+        value: nfs
+      serviceAccountName: nfsd
+      containers:
+      - name: nfsd
+        image: itsthenetwork/nfs-server-alpine:9
+        resources:
+          requests:
+            memory: "256Mi"
+          limits:
+            memory: "256Mi"
+        securityContext:
+          capabilities:
+            add: ["SYS_ADMIN", "SETPCAP"]
+        env:
+        - name: SHARED_DIRECTORY
+          value: '/export'
+        volumeMounts:
+        - name: export
+          mountPath: /export
+      volumes:
+        - name: export
+          hostPath:
+            path: /export
