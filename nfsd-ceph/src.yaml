@@ -65,5 +65,5 @@ spec:
           mountPath: /exports
       volumes:
         - name: export
-          PersistentVolumeClaim:
+          persistentVolumeClaim:
             claimName: nfsd-ceph
