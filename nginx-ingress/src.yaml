@@ -368,12 +368,9 @@ spec:
             successThreshold: 1
             failureThreshold: 3
           resources:
-            limits:
-              cpu: 100m
-              memory: 64Mi
             requests:
               cpu: 100m
-              memory: 64Mi
+              memory: 256Mi
             
       hostNetwork: false
       serviceAccountName: ing-nginx-ingress
