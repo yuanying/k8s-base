@@ -1,0 +1,5 @@
+commonLabels:
+  resource: pvc
+resources:
+- nfsd-ceph.yaml
+- codimd-postgres.yaml

@@ -1,0 +1,4 @@
+namespace: nfsd-ceph
+resources:
+- namespace.yaml
+- src.yaml

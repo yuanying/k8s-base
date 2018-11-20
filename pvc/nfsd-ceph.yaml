@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+  labels:
+    use: "nfsd-ceph"
+  name: "nfsd-ceph"
+  namespace: "nfsd-ceph"
+spec:
+  storageClassName: "rook-ceph-block"
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: "150Gi"
