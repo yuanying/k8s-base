@@ -2,5 +2,4 @@ commonLabels:
   app: nginx-ingress
 namespace: ingress
 resources:
-- namespace.yaml
 - src.yaml

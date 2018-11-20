@@ -2,5 +2,4 @@ commonLabels:
   app: metallb
 namespace: metallb
 resources:
-- namespace.yaml
 - src.yaml
