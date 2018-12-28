@@ -1,4 +1,4 @@
-# based on https://github.com/kubernetes/kubernetes/blob/a9fb3f5fc997607c734b04be09af50232ff274f3/cluster/addons/dns/coredns/coredns.yaml.base
+# based on https://github.com/kubernetes/kubernetes/blob/v1.13.1/cluster/addons/dns/coredns/coredns.yaml.base
 
 apiVersion: v1
 kind: ServiceAccount
@@ -26,6 +26,12 @@ rules:
   verbs:
   - list
   - watch
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -51,9 +57,11 @@ metadata:
   name: coredns
   namespace: kube-system
   labels:
+    ## Disable customization by user
+    # addonmanager.kubernetes.io/mode: EnsureExists
     addonmanager.kubernetes.io/mode: Reconcile
 data:
-  Corefile: |-
+  Corefile: |
     .:53 {
         errors
         health
@@ -77,6 +85,7 @@ metadata:
   namespace: kube-system
   labels:
     k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
     kubernetes.io/name: "CoreDNS"
 spec:
@@ -100,14 +109,12 @@ spec:
     spec:
       serviceAccountName: coredns
       tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
       - key: "CriticalAddonsOnly"
         operator: "Exists"
       priorityClassName: system-cluster-critical
       containers:
       - name: coredns
-        image: k8s.gcr.io/coredns:1.2.4
+        image: k8s.gcr.io/coredns:1.2.6
         imagePullPolicy: IfNotPresent
         resources:
           limits:
@@ -163,6 +170,7 @@ metadata:
     prometheus.io/scrape: "true"
   labels:
     k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
     kubernetes.io/name: "CoreDNS"
 spec:
