@@ -1,4 +1,5 @@
 commonLabels:
   app: cert-manager
 resources:
-- cert-manager.yaml
+- 00-crds.yaml
+- src.yaml

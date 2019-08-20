@@ -1,0 +1,16 @@
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 0
+    maxUnavailable: 1
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+
+ingressShim:
+  defaultIssuerName: "letsencrypt-staging"
+  defaultIssuerKind: "ClusterIssuer"
+  # defaultACMEChallengeType: ""
+  # defaultACMEDNS01ChallengeProvider: ""
