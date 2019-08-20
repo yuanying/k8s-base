@@ -1,0 +1,6 @@
+commonLabels:
+  app: kuard
+namespace: kuard
+resources:
+- ns.yaml
+- src.yaml
