@@ -3,3 +3,14 @@ commonLabels:
 namespace: ingress
 resources:
 - src.yaml
+patchesJson6902:
+- target:
+    version: v1
+    kind: Service
+    name: ing-nginx-ingress-controller
+  path: patch.json
+- target:
+    version: v1
+    kind: Service
+    name: ing-nginx-ingress-default-backend
+  path: patch.json
