@@ -1,17 +1,51 @@
 ---
-# Source: nginx-ingress/templates/controller-configmap.yaml
-apiVersion: v1
-kind: ConfigMap
+# Source: nginx-ingress/templates/podsecuritypolicy.yaml
+
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
 metadata:
+  name: ing-nginx-ingress 
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-0.31.0
-    component: "controller"
+    chart: nginx-ingress-1.16.1
     heritage: Tiller
     release: ing
-  name: ing-nginx-ingress-controller
-data:
-  enable-vts-status: "true"
+spec:
+  allowedCapabilities:
+    - NET_BIND_SERVICE
+  privileged: false
+  allowPrivilegeEscalation: true
+  # Allow core volume types.
+  volumes:
+    - 'configMap'
+    #- 'emptyDir'
+    #- 'projected'
+    - 'secret'
+    #- 'downwardAPI'
+  hostNetwork: false
+  hostIPC: false
+  hostPID: false
+  runAsUser:
+    # Require the container to run without root privileges.
+    rule: 'MustRunAsNonRoot'
+  supplementalGroups:
+    rule: 'MustRunAs'
+    ranges:
+      # Forbid adding the root group.
+      - min: 1
+        max: 65535
+  fsGroup:
+    rule: 'MustRunAs'
+    ranges:
+      # Forbid adding the root group.
+      - min: 1
+        max: 65535
+  readOnlyRootFilesystem: false
+  seLinux:
+    rule: 'RunAsAny'
+  hostPorts:
+    - max: 65535
+      min: 1
 
 ---
 # Source: nginx-ingress/templates/serviceaccount.yaml
@@ -20,7 +54,7 @@ kind: ServiceAccount
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-0.31.0
+    chart: nginx-ingress-1.16.1
     heritage: Tiller
     release: ing
   name: ing-nginx-ingress
@@ -31,7 +65,7 @@ kind: ClusterRole
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-0.31.0
+    chart: nginx-ingress-1.16.1
     heritage: Tiller
     release: ing
   name: ing-nginx-ingress
@@ -64,6 +98,7 @@ rules:
       - watch
   - apiGroups:
       - extensions
+      - "networking.k8s.io" # k8s 1.14+
     resources:
       - ingresses
     verbs:
@@ -79,6 +114,7 @@ rules:
       - patch
   - apiGroups:
       - extensions
+      - "networking.k8s.io" # k8s 1.14+
     resources:
       - ingresses/status
     verbs:
@@ -90,7 +126,7 @@ kind: ClusterRoleBinding
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-0.31.0
+    chart: nginx-ingress-1.16.1
     heritage: Tiller
     release: ing
   name: ing-nginx-ingress
@@ -109,7 +145,7 @@ kind: Role
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-0.31.0
+    chart: nginx-ingress-1.16.1
     heritage: Tiller
     release: ing
   name: ing-nginx-ingress
@@ -142,6 +178,7 @@ rules:
       - watch
   - apiGroups:
       - extensions
+      - "networking.k8s.io" # k8s 1.14+
     resources:
       - ingresses
     verbs:
@@ -150,6 +187,7 @@ rules:
       - watch
   - apiGroups:
       - extensions
+      - "networking.k8s.io" # k8s 1.14+
     resources:
       - ingresses/status
     verbs:
@@ -184,6 +222,10 @@ rules:
     verbs:
       - create
       - patch
+  - apiGroups:      ['extensions']
+    resources:      ['podsecuritypolicies']
+    verbs:          ['use']
+    resourceNames:  [ing-nginx-ingress]
 ---
 # Source: nginx-ingress/templates/rolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -191,7 +233,7 @@ kind: RoleBinding
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-0.31.0
+    chart: nginx-ingress-1.16.1
     heritage: Tiller
     release: ing
   name: ing-nginx-ingress
@@ -210,12 +252,13 @@ kind: Service
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-0.31.0
+    chart: nginx-ingress-1.16.1
     component: "controller"
     heritage: Tiller
     release: ing
   name: ing-nginx-ingress-controller
 spec:
+  clusterIP: ""
   loadBalancerIP: "192.168.1.200"
   ports:
     - name: http
@@ -233,31 +276,6 @@ spec:
   type: "LoadBalancer"
 
 ---
-# Source: nginx-ingress/templates/controller-stats-service.yaml
-
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: nginx-ingress
-    chart: nginx-ingress-0.31.0
-    component: "controller"
-    heritage: Tiller
-    release: ing
-  name: ing-nginx-ingress-controller-stats
-spec:
-  clusterIP: ""
-  ports:
-    - name: stats
-      port: 18080
-      targetPort: stats
-  selector:
-    app: nginx-ingress
-    component: "controller"
-    release: ing
-  type: "ClusterIP"
-
----
 # Source: nginx-ingress/templates/default-backend-service.yaml
 
 apiVersion: v1
@@ -265,7 +283,7 @@ kind: Service
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-0.31.0
+    chart: nginx-ingress-1.16.1
     component: "default-backend"
     heritage: Tiller
     release: ing
@@ -291,7 +309,7 @@ kind: Deployment
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-0.31.0
+    chart: nginx-ingress-1.16.1
     component: "controller"
     heritage: Tiller
     release: ing
@@ -300,7 +318,9 @@ spec:
   replicas: 1
   revisionHistoryLimit: 10
   strategy:
-    {}
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
     
   minReadySeconds: 0
   template:
@@ -313,7 +333,7 @@ spec:
       dnsPolicy: ClusterFirst
       containers:
         - name: nginx-ingress-controller
-          image: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.20.0"
+          image: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.25.1"
           imagePullPolicy: "IfNotPresent"
           args:
             - /nginx-ingress-controller
@@ -328,6 +348,7 @@ spec:
                 add:
                 - NET_BIND_SERVICE
             runAsUser: 33
+            allowPrivilegeEscalation: true
           env:
             - name: POD_NAME
               valueFrom:
@@ -354,9 +375,6 @@ spec:
             - name: https
               containerPort: 443
               protocol: TCP
-            - name: stats
-              containerPort: 18080
-              protocol: TCP
           readinessProbe:
             httpGet:
               path: /healthz
@@ -368,9 +386,12 @@ spec:
             successThreshold: 1
             failureThreshold: 3
           resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
             requests:
               cpu: 100m
-              memory: 256Mi
+              memory: 64Mi
             
       hostNetwork: false
       serviceAccountName: ing-nginx-ingress
@@ -384,7 +405,7 @@ kind: Deployment
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-0.31.0
+    chart: nginx-ingress-1.16.1
     component: "default-backend"
     heritage: Tiller
     release: ing
@@ -401,16 +422,31 @@ spec:
     spec:
       containers:
         - name: nginx-ingress-default-backend
-          image: "k8s.gcr.io/defaultbackend:1.4"
+          image: "k8s.gcr.io/defaultbackend-amd64:1.5"
           imagePullPolicy: "IfNotPresent"
-          # args:
+          args:
+          securityContext:
+            runAsUser: 65534
           livenessProbe:
             httpGet:
               path: /healthz
               port: 8080
               scheme: HTTP
             initialDelaySeconds: 30
+            periodSeconds: 10
             timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
           ports:
             - name: http
               containerPort: 8080
@@ -424,6 +460,14 @@ spec:
               memory: 20Mi
             
       terminationGracePeriodSeconds: 60
+
+---
+# Source: nginx-ingress/templates/addheaders-configmap.yaml
+
+
+---
+# Source: nginx-ingress/templates/controller-configmap.yaml
+
 
 ---
 # Source: nginx-ingress/templates/controller-daemonset.yaml
@@ -442,15 +486,19 @@ spec:
 
 
 ---
+# Source: nginx-ingress/templates/controller-prometheusrules.yaml
+
+
+---
+# Source: nginx-ingress/templates/controller-servicemonitor.yaml
+
+
+---
 # Source: nginx-ingress/templates/default-backend-poddisruptionbudget.yaml
 
 
 ---
-# Source: nginx-ingress/templates/headers-configmap.yaml
-
-
----
-# Source: nginx-ingress/templates/podsecuritypolicy.yaml
+# Source: nginx-ingress/templates/proxyheaders-configmap.yaml
 
 
 ---
