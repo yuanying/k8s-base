@@ -1,4 +1,36 @@
 ---
+# Source: metallb/templates/psp.yaml
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: mlb0-metallb-speaker
+  labels:
+    heritage: "Tiller"
+    release: "mlb0"
+    chart: metallb-0.11.2
+    app: metallb
+spec:
+  hostNetwork: true
+  hostPorts:
+  - min: 7472
+    max: 7472
+  privileged: true
+  allowPrivilegeEscalation: false
+  allowedCapabilities:
+  - 'NET_ADMIN'
+  - 'NET_RAW'
+  - 'SYS_ADMIN'
+  volumes:
+  - '*'
+  fsGroup:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+---
 # Source: metallb/templates/config.yaml
 
 apiVersion: v1
@@ -8,7 +40,7 @@ metadata:
   labels:
     heritage: "Tiller"
     release: "mlb0"
-    chart: metallb-0.8.0
+    chart: metallb-0.11.2
     app: metallb
 data:
   config: |
@@ -17,7 +49,7 @@ data:
       - 192.168.1.190-192.168.1.254
       name: default
       protocol: layer2
-
+    
 
 ---
 # Source: metallb/templates/service-accounts.yaml
@@ -29,7 +61,7 @@ metadata:
   labels:
     heritage: "Tiller"
     release: "mlb0"
-    chart: metallb-0.8.0
+    chart: metallb-0.11.2
     app: metallb
 ---
 apiVersion: v1
@@ -39,7 +71,7 @@ metadata:
   labels:
     heritage: "Tiller"
     release: "mlb0"
-    chart: metallb-0.8.0
+    chart: metallb-0.11.2
     app: metallb
 
 ---
@@ -52,7 +84,7 @@ metadata:
   labels:
     heritage: "Tiller"
     release: "mlb0"
-    chart: metallb-0.8.0
+    chart: metallb-0.11.2
     app: metallb
 rules:
 - apiGroups: [""]
@@ -72,12 +104,19 @@ metadata:
   labels:
     heritage: "Tiller"
     release: "mlb0"
-    chart: metallb-0.8.0
+    chart: metallb-0.11.2
     app: metallb
 rules:
 - apiGroups: [""]
   resources: ["services", "endpoints", "nodes"]
   verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create", "patch"]
+- apiGroups: ["extensions"]
+  resources: ["podsecuritypolicies"]
+  resourceNames: ["mlb0-metallb-speaker"]
+  verbs: ["use"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -86,15 +125,12 @@ metadata:
   labels:
     heritage: "Tiller"
     release: "mlb0"
-    chart: metallb-0.8.0
+    chart: metallb-0.11.2
     app: metallb
 rules:
 - apiGroups: [""]
   resources: ["configmaps"]
   verbs: ["get", "list", "watch"]
-- apiGroups: [""]
-  resources: ["events"]
-  verbs: ["create"]
 ---
 
 ## Role bindings
@@ -105,7 +141,7 @@ metadata:
   labels:
     heritage: "Tiller"
     release: "mlb0"
-    chart: metallb-0.8.0
+    chart: metallb-0.11.2
     app: metallb
 subjects:
 - kind: ServiceAccount
@@ -123,7 +159,7 @@ metadata:
   labels:
     heritage: "Tiller"
     release: "mlb0"
-    chart: metallb-0.8.0
+    chart: metallb-0.11.2
     app: metallb
 subjects:
 - kind: ServiceAccount
@@ -141,7 +177,7 @@ metadata:
   labels:
     heritage: "Tiller"
     release: "mlb0"
-    chart: metallb-0.8.0
+    chart: metallb-0.11.2
     app: metallb
 subjects:
 - kind: ServiceAccount
@@ -154,14 +190,14 @@ roleRef:
   name: mlb0-metallb-config-watcher
 ---
 # Source: metallb/templates/speaker.yaml
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: mlb0-metallb-speaker
   labels:
     heritage: "Tiller"
     release: "mlb0"
-    chart: metallb-0.8.0
+    chart: metallb-0.11.2
     app: metallb
     component: speaker
 spec:
@@ -175,16 +211,22 @@ spec:
       labels:
         heritage: "Tiller"
         release: "mlb0"
-        chart: metallb-0.8.0
+        chart: metallb-0.11.2
         app: metallb
         component: speaker
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "7472"
     spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
       serviceAccountName: mlb0-metallb-speaker
       terminationGracePeriodSeconds: 0
       hostNetwork: true
       containers:
       - name: speaker
-        image: metallb/speaker:v0.7.3
+        image: metallb/speaker:v0.8.1
         imagePullPolicy: IfNotPresent
         args:
         - --port=7472
@@ -194,6 +236,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
+        - name: METALLB_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
         ports:
         - name: monitoring
           containerPort: 7472
@@ -204,26 +250,30 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
-
+          
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
           capabilities:
             drop:
-            - all
+            - ALL
             add:
-            - net_raw
+            - NET_ADMIN
+            - NET_RAW
+            - SYS_ADMIN
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
 
 ---
 # Source: metallb/templates/controller.yaml
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mlb0-metallb-controller
   labels:
     heritage: "Tiller"
     release: "mlb0"
-    chart: metallb-0.8.0
+    chart: metallb-0.11.2
     app: metallb
     component: controller
 spec:
@@ -238,18 +288,23 @@ spec:
       labels:
         heritage: "Tiller"
         release: "mlb0"
-        chart: metallb-0.8.0
+        chart: metallb-0.11.2
         app: metallb
         component: controller
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "7472"
     spec:
       serviceAccountName: mlb0-metallb-controller
       terminationGracePeriodSeconds: 0
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534 # nobody
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
       containers:
       - name: controller
-        image: metallb/controller:v0.7.3
+        image: metallb/controller:v0.8.1
         imagePullPolicy: IfNotPresent
         args:
         - --port=7472
@@ -264,10 +319,23 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
-
+          
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
             - all
           readOnlyRootFilesystem: true
+
+---
+# Source: metallb/templates/prometheusrules.yaml
+ 
+
+---
+# Source: metallb/templates/service.yaml
+
+
+---
+# Source: metallb/templates/servicemonitor.yaml
+
+

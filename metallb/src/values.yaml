@@ -5,12 +5,15 @@ configInline:
     addresses:
     - 192.168.1.190-192.168.1.254
 
+prometheus:
+  scrapeAnnotations: true
+
 # controller contains configuration specific to the MetalLB cluster
 # controller.
 controller:
   image:
     repository: metallb/controller
-    tag: v0.7.3
+    tag: v0.8.1
     pullPolicy: IfNotPresent
   resources:
     limits:
@@ -25,7 +28,7 @@ controller:
 speaker:
   image:
     repository: metallb/speaker
-    tag: v0.7.3
+    tag: v0.8.1
     pullPolicy: IfNotPresent
   resources:
     limits:
