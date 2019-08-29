@@ -4,3 +4,4 @@ resources:
 - nfsd-ceph.yaml
 - ingress.yaml
 - cert-manager.yaml
+- istio.yaml
