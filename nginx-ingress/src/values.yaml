@@ -11,6 +11,9 @@ controller:
   image:
     tag: "0.25.1"
 
+  extraArgs:
+    enable-ssl-passthrough:
+
   resources:
    limits:
      cpu: 100m

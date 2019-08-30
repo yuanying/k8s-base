@@ -7,7 +7,7 @@ metadata:
   name: ing-nginx-ingress 
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.16.1
+    chart: nginx-ingress-1.17.1
     heritage: Tiller
     release: ing
 spec:
@@ -54,7 +54,7 @@ kind: ServiceAccount
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.16.1
+    chart: nginx-ingress-1.17.1
     heritage: Tiller
     release: ing
   name: ing-nginx-ingress
@@ -65,7 +65,7 @@ kind: ClusterRole
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.16.1
+    chart: nginx-ingress-1.17.1
     heritage: Tiller
     release: ing
   name: ing-nginx-ingress
@@ -126,7 +126,7 @@ kind: ClusterRoleBinding
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.16.1
+    chart: nginx-ingress-1.17.1
     heritage: Tiller
     release: ing
   name: ing-nginx-ingress
@@ -145,7 +145,7 @@ kind: Role
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.16.1
+    chart: nginx-ingress-1.17.1
     heritage: Tiller
     release: ing
   name: ing-nginx-ingress
@@ -233,7 +233,7 @@ kind: RoleBinding
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.16.1
+    chart: nginx-ingress-1.17.1
     heritage: Tiller
     release: ing
   name: ing-nginx-ingress
@@ -252,7 +252,7 @@ kind: Service
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.16.1
+    chart: nginx-ingress-1.17.1
     component: "controller"
     heritage: Tiller
     release: ing
@@ -283,7 +283,7 @@ kind: Service
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.16.1
+    chart: nginx-ingress-1.17.1
     component: "default-backend"
     heritage: Tiller
     release: ing
@@ -309,7 +309,7 @@ kind: Deployment
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.16.1
+    chart: nginx-ingress-1.17.1
     component: "controller"
     heritage: Tiller
     release: ing
@@ -341,6 +341,7 @@ spec:
             - --election-id=ingress-controller-leader
             - --ingress-class=nginx
             - --configmap=ingress/ing-nginx-ingress-controller
+            - --enable-ssl-passthrough
           securityContext:
             capabilities:
                 drop:
@@ -405,7 +406,7 @@ kind: Deployment
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.16.1
+    chart: nginx-ingress-1.17.1
     component: "default-backend"
     heritage: Tiller
     release: ing
