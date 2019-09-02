@@ -1,3 +1,4 @@
 resources:
 - cm-certmanager.yaml
+- cm-network.yaml
 
