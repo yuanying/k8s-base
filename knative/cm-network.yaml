@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   autoTLS: "Enabled"
-  httpProtocol: "Redirected"
+  httpProtocol: "Enabled"
 kind: ConfigMap
 metadata:
   labels:

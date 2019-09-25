@@ -3,14 +3,10 @@ data:
   issuerRef: |
     kind: ClusterIssuer
     name: letsencrypt-staging
-
-  solverConfig: |
-    http01:
-      ingressClass: "nginx"
 kind: ConfigMap
 metadata:
   labels:
     networking.knative.dev/certificate-provider: cert-manager
-    serving.knative.dev/release: "v0.8.0"
+    serving.knative.dev/release: "v0.9.0"
   name: config-certmanager
   namespace: knative-serving
