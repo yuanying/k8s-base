@@ -1,3 +1,4 @@
 resources:
 - crd-10.yaml
 - crd-11.yaml
+- crd-12.yaml
