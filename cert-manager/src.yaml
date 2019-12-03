@@ -1,31 +1,16 @@
 ---
-# Source: cert-manager/charts/cainjector/templates/serviceaccount.yaml
+# Source: cert-manager/templates/cainjector-serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: cm-cainjector
+  name: cm-cert-manager-cainjector
   namespace: "cert-manager"
   labels:
     app: cainjector
     app.kubernetes.io/name: cainjector
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cainjector-v0.9.1
-
----
-# Source: cert-manager/charts/webhook/templates/serviceaccount.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: cm-webhook
-  namespace: "cert-manager"
-  labels:
-    app: webhook
-    app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: webhook-v0.9.1
-
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
 ---
 # Source: cert-manager/templates/serviceaccount.yaml
 apiVersion: v1
@@ -33,34 +18,47 @@ kind: ServiceAccount
 metadata:
   name: cm-cert-manager
   namespace: "cert-manager"
+  annotations:
   labels:
     app: cert-manager
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
 ---
-# Source: cert-manager/charts/cainjector/templates/rbac.yaml
+# Source: cert-manager/templates/webhook-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cm-cert-manager-webhook
+  namespace: "cert-manager"
+  labels:
+    app: webhook
+    app.kubernetes.io/name: webhook
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+---
+# Source: cert-manager/templates/cainjector-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  name: cm-cainjector
+  name: cm-cert-manager-cainjector
   labels:
     app: cainjector
     app.kubernetes.io/name: cainjector
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cainjector-v0.9.1
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
 rules:
-  - apiGroups: ["certmanager.k8s.io"]
+  - apiGroups: ["cert-manager.io"]
     resources: ["certificates"]
     verbs: ["get", "list", "watch"]
   - apiGroups: [""]
     resources: ["secrets"]
     verbs: ["get", "list", "watch"]
   - apiGroups: [""]
-    resources: ["configmaps", "events"]
+    resources: ["events"]
     verbs: ["get", "create", "update", "patch"]
   - apiGroups: ["admissionregistration.k8s.io"]
     resources: ["validatingwebhookconfigurations", "mutatingwebhookconfigurations"]
@@ -72,98 +70,7 @@ rules:
     resources: ["customresourcedefinitions"]
     verbs: ["get", "list", "watch", "update"]
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: cm-cainjector
-  labels:
-    app: cainjector
-    app.kubernetes.io/name: cainjector
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cainjector-v0.9.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cm-cainjector
-subjects:
-  - name: cm-cainjector
-    namespace: "cert-manager"
-    kind: ServiceAccount
----
 # Source: cert-manager/templates/rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
-metadata:
-  name: cm-cert-manager-leaderelection
-  labels:
-    app: cert-manager
-    app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-rules:
-  # Used for leader election by the controller
-  - apiGroups: [""]
-    resources: ["configmaps"]
-    verbs: ["get", "create", "update", "patch"]
-
----
-
-# Issuer controller role
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
-metadata:
-  name: cm-cert-manager-controller-issuers
-  labels:
-    app: cert-manager
-    app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-rules:
-  - apiGroups: ["certmanager.k8s.io"]
-    resources: ["issuers", "issuers/status"]
-    verbs: ["update"]
-  - apiGroups: ["certmanager.k8s.io"]
-    resources: ["issuers"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: [""]
-    resources: ["secrets"]
-    verbs: ["get", "list", "watch", "create", "update", "delete"]
-  - apiGroups: [""]
-    resources: ["events"]
-    verbs: ["create", "patch"]
-
----
-
-# ClusterIssuer controller role
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
-metadata:
-  name: cm-cert-manager-controller-clusterissuers
-  labels:
-    app: cert-manager
-    app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-rules:
-  - apiGroups: ["certmanager.k8s.io"]
-    resources: ["clusterissuers", "clusterissuers/status"]
-    verbs: ["update"]
-  - apiGroups: ["certmanager.k8s.io"]
-    resources: ["clusterissuers"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: [""]
-    resources: ["secrets"]
-    verbs: ["get", "list", "watch", "create", "update", "delete"]
-  - apiGroups: [""]
-    resources: ["events"]
-    verbs: ["create", "patch"]
-
----
-
 # Certificates controller role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
@@ -172,34 +79,33 @@ metadata:
   labels:
     app: cert-manager
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
 rules:
-  - apiGroups: ["certmanager.k8s.io"]
+  - apiGroups: ["cert-manager.io"]
     resources: ["certificates", "certificates/status", "certificaterequests", "certificaterequests/status"]
     verbs: ["update"]
-  - apiGroups: ["certmanager.k8s.io"]
-    resources: ["certificates", "certificaterequests", "clusterissuers", "issuers", "orders"]
+  - apiGroups: ["cert-manager.io"]
+    resources: ["certificates", "certificaterequests", "clusterissuers", "issuers"]
     verbs: ["get", "list", "watch"]
   # We require these rules to support users with the OwnerReferencesPermissionEnforcement
-  # admission controller enabled:
+  # admission controller enabled:
   # https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#ownerreferencespermissionenforcement
-  - apiGroups: ["certmanager.k8s.io"]
-    resources: ["certificates/finalizers"]
+  - apiGroups: ["cert-manager.io"]
+    resources: ["certificates/finalizers", "certificaterequests/finalizers"]
     verbs: ["update"]
-  - apiGroups: ["certmanager.k8s.io"]
+  - apiGroups: ["acme.cert-manager.io"]
     resources: ["orders"]
-    verbs: ["create", "delete"]
+    verbs: ["create", "delete", "get", "list", "watch"]
   - apiGroups: [""]
     resources: ["secrets"]
     verbs: ["get", "list", "watch", "create", "update", "delete"]
   - apiGroups: [""]
     resources: ["events"]
     verbs: ["create", "patch"]
-
 ---
-
+# Source: cert-manager/templates/rbac.yaml
 # Orders controller role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
@@ -208,23 +114,26 @@ metadata:
   labels:
     app: cert-manager
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
 rules:
-  - apiGroups: ["certmanager.k8s.io"]
+  - apiGroups: ["acme.cert-manager.io"]
     resources: ["orders", "orders/status"]
     verbs: ["update"]
-  - apiGroups: ["certmanager.k8s.io"]
-    resources: ["orders", "clusterissuers", "issuers", "challenges"]
+  - apiGroups: ["acme.cert-manager.io"]
+    resources: ["orders", "challenges"]
     verbs: ["get", "list", "watch"]
-  - apiGroups: ["certmanager.k8s.io"]
+  - apiGroups: ["cert-manager.io"]
+    resources: ["clusterissuers", "issuers"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["acme.cert-manager.io"]
     resources: ["challenges"]
     verbs: ["create", "delete"]
   # We require these rules to support users with the OwnerReferencesPermissionEnforcement
-  # admission controller enabled:
+  # admission controller enabled:
   # https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#ownerreferencespermissionenforcement
-  - apiGroups: ["certmanager.k8s.io"]
+  - apiGroups: ["acme.cert-manager.io"]
     resources: ["orders/finalizers"]
     verbs: ["update"]
   - apiGroups: [""]
@@ -233,9 +142,97 @@ rules:
   - apiGroups: [""]
     resources: ["events"]
     verbs: ["create", "patch"]
-
 ---
-
+# Source: cert-manager/templates/rbac.yaml
+# ClusterIssuer controller role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: cm-cert-manager-controller-clusterissuers
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+rules:
+  - apiGroups: ["cert-manager.io"]
+    resources: ["clusterissuers", "clusterissuers/status"]
+    verbs: ["update"]
+  - apiGroups: ["cert-manager.io"]
+    resources: ["clusterissuers"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+---
+# Source: cert-manager/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cm-cert-manager-view
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+rules:
+  - apiGroups: ["cert-manager.io"]
+    resources: ["certificates", "certificaterequests", "issuers"]
+    verbs: ["get", "list", "watch"]
+---
+# Source: cert-manager/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cm-cert-manager-edit
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+rules:
+  - apiGroups: ["cert-manager.io"]
+    resources: ["certificates", "certificaterequests", "issuers"]
+    verbs: ["create", "delete", "deletecollection", "patch", "update"]
+---
+# Source: cert-manager/templates/rbac.yaml
+# Issuer controller role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: cm-cert-manager-controller-issuers
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+rules:
+  - apiGroups: ["cert-manager.io"]
+    resources: ["issuers", "issuers/status"]
+    verbs: ["update"]
+  - apiGroups: ["cert-manager.io"]
+    resources: ["issuers"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+---
+# Source: cert-manager/templates/rbac.yaml
 # Challenges controller role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
@@ -244,17 +241,21 @@ metadata:
   labels:
     app: cert-manager
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
 rules:
   # Use to update challenge resource status
-  - apiGroups: ["certmanager.k8s.io"]
+  - apiGroups: ["acme.cert-manager.io"]
     resources: ["challenges", "challenges/status"]
     verbs: ["update"]
+  # Used to watch challenge resources
+  - apiGroups: ["acme.cert-manager.io"]
+    resources: ["challenges"]
+    verbs: ["get", "list", "watch"]
   # Used to watch challenges, issuer and clusterissuer resources
-  - apiGroups: ["certmanager.k8s.io"]
-    resources: ["challenges", "issuers", "clusterissuers"]
+  - apiGroups: ["cert-manager.io"]
+    resources: ["issuers", "clusterissuers"]
     verbs: ["get", "list", "watch"]
   # Need to be able to retrieve ACME account private key to complete challenges
   - apiGroups: [""]
@@ -272,18 +273,17 @@ rules:
     resources: ["ingresses"]
     verbs: ["get", "list", "watch", "create", "delete", "update"]
   # We require these rules to support users with the OwnerReferencesPermissionEnforcement
-  # admission controller enabled:
+  # admission controller enabled:
   # https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#ownerreferencespermissionenforcement
-  - apiGroups: ["certmanager.k8s.io"]
+  - apiGroups: ["acme.cert-manager.io"]
     resources: ["challenges/finalizers"]
     verbs: ["update"]
-  # DNS01 rules (duplicated above)
+  # DNS01 rules (duplicated above)
   - apiGroups: [""]
     resources: ["secrets"]
     verbs: ["get", "list", "watch"]
-
 ---
-
+# Source: cert-manager/templates/rbac.yaml
 # ingress-shim controller role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
@@ -292,21 +292,21 @@ metadata:
   labels:
     app: cert-manager
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
 rules:
-  - apiGroups: ["certmanager.k8s.io"]
+  - apiGroups: ["cert-manager.io"]
     resources: ["certificates", "certificaterequests"]
     verbs: ["create", "update", "delete"]
-  - apiGroups: ["certmanager.k8s.io"]
+  - apiGroups: ["cert-manager.io"]
     resources: ["certificates", "certificaterequests", "issuers", "clusterissuers"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["extensions"]
     resources: ["ingresses"]
     verbs: ["get", "list", "watch"]
   # We require these rules to support users with the OwnerReferencesPermissionEnforcement
-  # admission controller enabled:
+  # admission controller enabled:
   # https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#ownerreferencespermissionenforcement
   - apiGroups: ["extensions"]
     resources: ["ingresses/finalizers"]
@@ -314,260 +314,21 @@ rules:
   - apiGroups: [""]
     resources: ["events"]
     verbs: ["create", "patch"]
-
 ---
-
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: cm-cert-manager-leaderelection
-  labels:
-    app: cert-manager
-    app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cm-cert-manager-leaderelection
-subjects:
-  - name: cm-cert-manager
-    namespace: "cert-manager"
-    kind: ServiceAccount
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: cm-cert-manager-controller-issuers
-  labels:
-    app: cert-manager
-    app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cm-cert-manager-controller-issuers
-subjects:
-  - name: cm-cert-manager
-    namespace: "cert-manager"
-    kind: ServiceAccount
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: cm-cert-manager-controller-clusterissuers
-  labels:
-    app: cert-manager
-    app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cm-cert-manager-controller-clusterissuers
-subjects:
-  - name: cm-cert-manager
-    namespace: "cert-manager"
-    kind: ServiceAccount
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: cm-cert-manager-controller-certificates
-  labels:
-    app: cert-manager
-    app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cm-cert-manager-controller-certificates
-subjects:
-  - name: cm-cert-manager
-    namespace: "cert-manager"
-    kind: ServiceAccount
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: cm-cert-manager-controller-orders
-  labels:
-    app: cert-manager
-    app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cm-cert-manager-controller-orders
-subjects:
-  - name: cm-cert-manager
-    namespace: "cert-manager"
-    kind: ServiceAccount
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: cm-cert-manager-controller-challenges
-  labels:
-    app: cert-manager
-    app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cm-cert-manager-controller-challenges
-subjects:
-  - name: cm-cert-manager
-    namespace: "cert-manager"
-    kind: ServiceAccount
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: cm-cert-manager-controller-ingress-shim
-  labels:
-    app: cert-manager
-    app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cm-cert-manager-controller-ingress-shim
-subjects:
-  - name: cm-cert-manager
-    namespace: "cert-manager"
-    kind: ServiceAccount
-
----
-
+# Source: cert-manager/templates/webhook-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: cm-cert-manager-view
-  labels:
-    app: cert-manager
-    app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-    rbac.authorization.k8s.io/aggregate-to-view: "true"
-    rbac.authorization.k8s.io/aggregate-to-edit: "true"
-    rbac.authorization.k8s.io/aggregate-to-admin: "true"
-rules:
-  - apiGroups: ["certmanager.k8s.io"]
-    resources: ["certificates", "certificaterequests", "issuers"]
-    verbs: ["get", "list", "watch"]
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: cm-cert-manager-edit
-  labels:
-    app: cert-manager
-    app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
-    rbac.authorization.k8s.io/aggregate-to-edit: "true"
-    rbac.authorization.k8s.io/aggregate-to-admin: "true"
-rules:
-  - apiGroups: ["certmanager.k8s.io"]
-    resources: ["certificates", "certificaterequests", "issuers"]
-    verbs: ["create", "delete", "deletecollection", "patch", "update"]
-
----
-# Source: cert-manager/charts/webhook/templates/rbac.yaml
-### Webhook ###
----
-# apiserver gets the auth-delegator role to delegate auth decisions to
-# the core apiserver
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: cm-webhook:auth-delegator
+  name: cm-cert-manager-webhook:webhook-requester
   labels:
     app: webhook
     app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: webhook-v0.9.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: system:auth-delegator
-subjects:
-- apiGroup: ""
-  kind: ServiceAccount
-  name: cm-webhook
-  namespace: cert-manager
-
----
-
-# apiserver gets the ability to read authentication. This allows it to
-# read the specific configmap that has the requestheader-* entries to
-# api agg
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: RoleBinding
-metadata:
-  name: cm-webhook:webhook-authentication-reader
-  namespace: kube-system
-  labels:
-    app: webhook
-    app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: webhook-v0.9.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: extension-apiserver-authentication-reader
-subjects:
-- apiGroup: ""
-  kind: ServiceAccount
-  name: cm-webhook
-  namespace: cert-manager
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: cm-webhook:webhook-requester
-  labels:
-    app: webhook
-    app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: webhook-v0.9.1
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
 rules:
 - apiGroups:
-  - admission.certmanager.k8s.io
+  - admission.cert-manager.io
   resources:
   - certificates
   - certificaterequests
@@ -575,71 +336,366 @@ rules:
   - clusterissuers
   verbs:
   - create
-
 ---
-# Source: cert-manager/charts/webhook/templates/service.yaml
+# Source: cert-manager/templates/cainjector-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: cm-cert-manager-cainjector
+  labels:
+    app: cainjector
+    app.kubernetes.io/name: cainjector
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cm-cert-manager-cainjector
+subjects:
+  - name: cm-cert-manager-cainjector
+    namespace: "cert-manager"
+    kind: ServiceAccount
+---
+# Source: cert-manager/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: cm-cert-manager-controller-issuers
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cm-cert-manager-controller-issuers
+subjects:
+  - name: cm-cert-manager
+    namespace: "cert-manager"
+    kind: ServiceAccount
+---
+# Source: cert-manager/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: cm-cert-manager-controller-clusterissuers
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cm-cert-manager-controller-clusterissuers
+subjects:
+  - name: cm-cert-manager
+    namespace: "cert-manager"
+    kind: ServiceAccount
+---
+# Source: cert-manager/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: cm-cert-manager-controller-orders
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cm-cert-manager-controller-orders
+subjects:
+  - name: cm-cert-manager
+    namespace: "cert-manager"
+    kind: ServiceAccount
+---
+# Source: cert-manager/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: cm-cert-manager-controller-certificates
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cm-cert-manager-controller-certificates
+subjects:
+  - name: cm-cert-manager
+    namespace: "cert-manager"
+    kind: ServiceAccount
+---
+# Source: cert-manager/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: cm-cert-manager-controller-challenges
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cm-cert-manager-controller-challenges
+subjects:
+  - name: cm-cert-manager
+    namespace: "cert-manager"
+    kind: ServiceAccount
+---
+# Source: cert-manager/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: cm-cert-manager-controller-ingress-shim
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cm-cert-manager-controller-ingress-shim
+subjects:
+  - name: cm-cert-manager
+    namespace: "cert-manager"
+    kind: ServiceAccount
+---
+# Source: cert-manager/templates/webhook-rbac.yaml
+# apiserver gets the auth-delegator role to delegate auth decisions to
+# the core apiserver
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: cm-cert-manager-webhook:auth-delegator
+  labels:
+    app: webhook
+    app.kubernetes.io/name: webhook
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+- apiGroup: ""
+  kind: ServiceAccount
+  name: cm-cert-manager-webhook
+  namespace: cert-manager
+---
+# Source: cert-manager/templates/cainjector-rbac.yaml
+# leader election rules
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: cm-cert-manager-cainjector:leaderelection
+  namespace: kube-system
+  labels:
+    app: cainjector
+    app.kubernetes.io/name: cainjector
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+rules:
+  # Used for leader election by the controller
+  # TODO: refine the permission to *just* the leader election configmap
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "create", "update", "patch"]
+---
+# Source: cert-manager/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: cm-cert-manager:leaderelection
+  namespace: kube-system
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+rules:
+  # Used for leader election by the controller
+  # TODO: refine the permission to *just* the leader election configmap
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "create", "update", "patch"]
+---
+# Source: cert-manager/templates/cainjector-rbac.yaml
+# grant cert-manager permission to manage the leaderelection configmap in the
+# leader election namespace
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: cm-cert-manager-cainjector:leaderelection
+  namespace: kube-system
+  labels:
+    app: cainjector
+    app.kubernetes.io/name: cainjector
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: cm-cert-manager-cainjector:leaderelection
+subjects:
+  - apiGroup: ""
+    kind: ServiceAccount
+    name: cm-cert-manager-cainjector
+    namespace: cert-manager
+---
+# Source: cert-manager/templates/rbac.yaml
+# grant cert-manager permission to manage the leaderelection configmap in the
+# leader election namespace
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: cm-cert-manager:leaderelection
+  namespace: kube-system
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: cm-cert-manager:leaderelection
+subjects:
+  - apiGroup: ""
+    kind: ServiceAccount
+    name: cm-cert-manager
+    namespace: cert-manager
+---
+# Source: cert-manager/templates/webhook-rbac.yaml
+# apiserver gets the ability to read authentication. This allows it to
+# read the specific configmap that has the requestheader-* entries to
+# api agg
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: cm-cert-manager-webhook:webhook-authentication-reader
+  namespace: kube-system
+  labels:
+    app: webhook
+    app.kubernetes.io/name: webhook
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: extension-apiserver-authentication-reader
+subjects:
+- apiGroup: ""
+  kind: ServiceAccount
+  name: cm-cert-manager-webhook
+  namespace: cert-manager
+---
+# Source: cert-manager/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: cm-webhook
+  name: cm-cert-manager
+  namespace: "cert-manager"
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 9402
+      targetPort: 9402
+  selector:
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cm
+---
+# Source: cert-manager/templates/webhook-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cm-cert-manager-webhook
   namespace: "cert-manager"
   labels:
     app: webhook
     app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: webhook-v0.9.1
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
 spec:
   type: ClusterIP
   ports:
   - name: https
     port: 443
-    targetPort: 6443
+    targetPort: 10250
   selector:
     app: webhook
     app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
 ---
-# Source: cert-manager/charts/cainjector/templates/deployment.yaml
+# Source: cert-manager/templates/cainjector-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cm-cainjector
+  name: cm-cert-manager-cainjector
   namespace: "cert-manager"
   labels:
     app: cainjector
     app.kubernetes.io/name: cainjector
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cainjector-v0.9.1
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: cainjector
       app.kubernetes.io/name: cainjector
-      app.kubernetes.io/instance:  cm
-      app.kubernetes.io/managed-by: Tiller
+      app.kubernetes.io/instance: cm
+      app.kubernetes.io/managed-by: Helm
   template:
     metadata:
       labels:
         app: cainjector
         app.kubernetes.io/name: cainjector
-        app.kubernetes.io/instance:  cm
-        app.kubernetes.io/managed-by: Tiller
-        helm.sh/chart: cainjector-v0.9.1
+        app.kubernetes.io/instance: cm
+        app.kubernetes.io/managed-by: Helm
+        helm.sh/chart: cert-manager-v0.12.0
       annotations:
     spec:
-      serviceAccountName: cm-cainjector
+      serviceAccountName: cm-cert-manager-cainjector
       containers:
-        - name: cainjector
-          image: "quay.io/jetstack/cert-manager-cainjector:v0.9.1"
+        - name: cert-manager
+          image: "quay.io/jetstack/cert-manager-cainjector:v0.12.0"
           imagePullPolicy: IfNotPresent
           args:
           - --v=2
-          - --leader-election-namespace=$(POD_NAMESPACE)
+          - --leader-election-namespace=kube-system
           env:
           - name: POD_NAMESPACE
             valueFrom:
@@ -647,65 +703,6 @@ spec:
                 fieldPath: metadata.namespace
           resources:
             {}
-            
-
----
-# Source: cert-manager/charts/webhook/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: cm-webhook
-  namespace: "cert-manager"
-  labels:
-    app: webhook
-    app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: webhook-v0.9.1
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: webhook
-      app.kubernetes.io/name: webhook
-      app.kubernetes.io/instance:  cm
-      app.kubernetes.io/managed-by: Tiller
-  template:
-    metadata:
-      labels:
-        app: webhook
-        app.kubernetes.io/name: webhook
-        app.kubernetes.io/instance:  cm
-        app.kubernetes.io/managed-by: Tiller
-        helm.sh/chart: webhook-v0.9.1
-      annotations:
-    spec:
-      serviceAccountName: cm-webhook
-      containers:
-        - name: webhook
-          image: "quay.io/jetstack/cert-manager-webhook:v0.9.1"
-          imagePullPolicy: IfNotPresent
-          args:
-          - --v=2
-          - --secure-port=6443
-          - --tls-cert-file=/certs/tls.crt
-          - --tls-private-key-file=/certs/tls.key
-          env:
-          - name: POD_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
-          resources:
-            {}
-            
-          volumeMounts:
-          - name: certs
-            mountPath: /certs
-      volumes:
-      - name: certs
-        secret:
-          secretName: cm-webhook-webhook-tls
-
 ---
 # Source: cert-manager/templates/deployment.yaml
 apiVersion: apps/v1
@@ -716,31 +713,30 @@ metadata:
   labels:
     app: cert-manager
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: cert-manager-v0.9.1
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: cert-manager
       app.kubernetes.io/name: cert-manager
-      app.kubernetes.io/instance:  cm
-      app.kubernetes.io/managed-by: Tiller
+      app.kubernetes.io/instance: cm
+      app.kubernetes.io/managed-by: Helm
   strategy:
     rollingUpdate:
       maxSurge: 0
       maxUnavailable: 1
     type: RollingUpdate
-    
   template:
     metadata:
       labels:
         app: cert-manager
         app.kubernetes.io/name: cert-manager
-        app.kubernetes.io/instance:  cm
-        app.kubernetes.io/managed-by: Tiller
-        helm.sh/chart: cert-manager-v0.9.1
+        app.kubernetes.io/instance: cm
+        app.kubernetes.io/managed-by: Helm
+        helm.sh/chart: cert-manager-v0.12.0
       annotations:
         prometheus.io/path: "/metrics"
         prometheus.io/scrape: 'true'
@@ -749,16 +745,21 @@ spec:
       serviceAccountName: cm-cert-manager
       containers:
         - name: cert-manager
-          image: "quay.io/jetstack/cert-manager-controller:v0.9.1"
+          image: "quay.io/jetstack/cert-manager-controller:v0.12.0"
           imagePullPolicy: IfNotPresent
           args:
           - --v=2
           - --cluster-resource-namespace=$(POD_NAMESPACE)
-          - --leader-election-namespace=$(POD_NAMESPACE)
+          - --leader-election-namespace=kube-system
           - --default-issuer-name=letsencrypt-staging
           - --default-issuer-kind=ClusterIssuer
+          - --webhook-namespace=$(POD_NAMESPACE)
+          - --webhook-ca-secret=cm-cert-manager-webhook-ca
+          - --webhook-serving-secret=cm-cert-manager-webhook-tls
+          - --webhook-dns-names=cm-cert-manager-webhook,cm-cert-manager-webhook.cert-manager,cm-cert-manager-webhook.cert-manager.svc
           ports:
           - containerPort: 9402
+            protocol: TCP
           env:
           - name: POD_NAMESPACE
             valueFrom:
@@ -768,137 +769,127 @@ spec:
             requests:
               cpu: 10m
               memory: 32Mi
-            
-
 ---
-# Source: cert-manager/charts/webhook/templates/apiservice.yaml
-apiVersion: apiregistration.k8s.io/v1beta1
-kind: APIService
+# Source: cert-manager/templates/webhook-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: v1beta1.admission.certmanager.k8s.io
+  name: cm-cert-manager-webhook
+  namespace: "cert-manager"
   labels:
     app: webhook
     app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: webhook-v0.9.1
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webhook
+      app.kubernetes.io/name: webhook
+      app.kubernetes.io/instance: cm
+      app.kubernetes.io/managed-by: Helm
+  template:
+    metadata:
+      labels:
+        app: webhook
+        app.kubernetes.io/name: webhook
+        app.kubernetes.io/instance: cm
+        app.kubernetes.io/managed-by: Helm
+        helm.sh/chart: cert-manager-v0.12.0
+      annotations:
+    spec:
+      serviceAccountName: cm-cert-manager-webhook
+      containers:
+        - name: cert-manager
+          image: "quay.io/jetstack/cert-manager-webhook:v0.12.0"
+          imagePullPolicy: IfNotPresent
+          args:
+          - --v=2
+          - --secure-port=10250
+          - --tls-cert-file=/certs/tls.crt
+          - --tls-private-key-file=/certs/tls.key
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: 6080
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 6080
+              scheme: HTTP
+          env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          resources:
+            {}
+          volumeMounts:
+          - name: certs
+            mountPath: /certs
+      volumes:
+      - name: certs
+        secret:
+          secretName: cm-cert-manager-webhook-tls
+---
+# Source: cert-manager/templates/webhook-rbac.yaml
+### Webhook ###
+---
+# Source: cert-manager/templates/webhook-mutating-webhook.yaml
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: cm-cert-manager-webhook
+  labels:
+    app: webhook
+    app.kubernetes.io/name: webhook
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
   annotations:
-    certmanager.k8s.io/inject-ca-from: "cert-manager/cm-webhook-webhook-tls"
-spec:
-  group: admission.certmanager.k8s.io
-  groupPriorityMinimum: 1000
-  versionPriority: 15
-  service:
-    name: cm-webhook
-    namespace: "cert-manager"
-  version: v1beta1
-
+    cert-manager.io/inject-ca-from-secret: "cert-manager/cm-cert-manager-webhook-tls"
+webhooks:
+  - name: webhook.cert-manager.io
+    rules:
+      - apiGroups:
+          - "cert-manager.io"
+          - "acme.cert-manager.io"
+        apiVersions:
+          - v1alpha2
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - "*/*"
+    failurePolicy: Fail
+    sideEffects: None
+    clientConfig:
+      service:
+        name: cm-cert-manager-webhook
+        namespace: "cert-manager"
+        path: /mutate
 ---
-# Source: cert-manager/charts/webhook/templates/pki.yaml
----
-# Create a selfsigned Issuer, in order to create a root CA certificate for
-# signing webhook serving certificates
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Issuer
-metadata:
-  name: cm-webhook-selfsign
-  namespace: "cert-manager"
-  labels:
-    app: webhook
-    app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: webhook-v0.9.1
-spec:
-  selfSigned: {}
-
----
-
-# Generate a CA Certificate used to sign certificates for the webhook
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Certificate
-metadata:
-  name: cm-webhook-ca
-  namespace: "cert-manager"
-  labels:
-    app: webhook
-    app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: webhook-v0.9.1
-spec:
-  secretName: cm-webhook-ca
-  duration: 43800h # 5y
-  issuerRef:
-    name: cm-webhook-selfsign
-  commonName: "ca.webhook.cert-manager"
-  isCA: true
-
----
-
-# Create an Issuer that uses the above generated CA certificate to issue certs
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Issuer
-metadata:
-  name: cm-webhook-ca
-  namespace: "cert-manager"
-  labels:
-    app: webhook
-    app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: webhook-v0.9.1
-spec:
-  ca:
-    secretName: cm-webhook-ca
-
----
-
-# Finally, generate a serving certificate for the webhook to use
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Certificate
-metadata:
-  name: cm-webhook-webhook-tls
-  namespace: "cert-manager"
-  labels:
-    app: webhook
-    app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: webhook-v0.9.1
-spec:
-  secretName: cm-webhook-webhook-tls
-  duration: 8760h # 1y
-  issuerRef:
-    name: cm-webhook-ca
-  dnsNames:
-  - cm-webhook
-  - cm-webhook.cert-manager
-  - cm-webhook.cert-manager.svc
-
----
-# Source: cert-manager/templates/servicemonitor.yaml
-
-
----
-# Source: cert-manager/charts/webhook/templates/validating-webhook.yaml
+# Source: cert-manager/templates/webhook-validating-webhook.yaml
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingWebhookConfiguration
 metadata:
-  name: cm-webhook
+  name: cm-cert-manager-webhook
   labels:
     app: webhook
     app.kubernetes.io/name: webhook
-    app.kubernetes.io/instance:  cm
-    app.kubernetes.io/managed-by: Tiller
-    helm.sh/chart: webhook-v0.9.1
+    app.kubernetes.io/instance: cm
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: cert-manager-v0.12.0
   annotations:
-    certmanager.k8s.io/inject-apiserver-ca: "true"
+    cert-manager.io/inject-ca-from-secret: "cert-manager/cm-cert-manager-webhook-tls"
 webhooks:
-  - name: certificates.admission.certmanager.k8s.io
+  - name: webhook.cert-manager.io
     namespaceSelector:
       matchExpressions:
-      - key: "certmanager.k8s.io/disable-validation"
+      - key: "cert-manager.io/disable-validation"
         operator: "NotIn"
         values:
         - "true"
@@ -908,72 +899,19 @@ webhooks:
         - cert-manager
     rules:
       - apiGroups:
-          - "certmanager.k8s.io"
+          - "cert-manager.io"
+          - "acme.cert-manager.io"
         apiVersions:
-          - v1alpha1
+          - v1alpha2
         operations:
           - CREATE
           - UPDATE
         resources:
-          - certificates
+          - "*/*"
     failurePolicy: Fail
+    sideEffects: None
     clientConfig:
       service:
-        name: kubernetes
-        namespace: default
-        path: /apis/admission.certmanager.k8s.io/v1beta1/certificates
-  - name: issuers.admission.certmanager.k8s.io
-    namespaceSelector:
-      matchExpressions:
-      - key: "certmanager.k8s.io/disable-validation"
-        operator: "NotIn"
-        values:
-        - "true"
-      - key: "name"
-        operator: "NotIn"
-        values:
-        - cert-manager
-    rules:
-      - apiGroups:
-          - "certmanager.k8s.io"
-        apiVersions:
-          - v1alpha1
-        operations:
-          - CREATE
-          - UPDATE
-        resources:
-          - issuers
-    failurePolicy: Fail
-    clientConfig:
-      service:
-        name: kubernetes
-        namespace: default
-        path: /apis/admission.certmanager.k8s.io/v1beta1/issuers
-  - name: clusterissuers.admission.certmanager.k8s.io
-    namespaceSelector:
-      matchExpressions:
-      - key: "certmanager.k8s.io/disable-validation"
-        operator: "NotIn"
-        values:
-        - "true"
-      - key: "name"
-        operator: "NotIn"
-        values:
-        - cert-manager
-    rules:
-      - apiGroups:
-          - "certmanager.k8s.io"
-        apiVersions:
-          - v1alpha1
-        operations:
-          - CREATE
-          - UPDATE
-        resources:
-          - clusterissuers
-    failurePolicy: Fail
-    clientConfig:
-      service:
-        name: kubernetes
-        namespace: default
-        path: /apis/admission.certmanager.k8s.io/v1beta1/clusterissuers
-
+        name: cm-cert-manager-webhook
+        namespace: "cert-manager"
+        path: /mutate
