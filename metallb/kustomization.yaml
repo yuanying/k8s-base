@@ -1,5 +1,0 @@
-commonLabels:
-  app: metallb
-namespace: metallb
-resources:
-- src.yaml

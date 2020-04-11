@@ -1,5 +1,0 @@
-commonLabels:
-  app: kube-lego
-namespace: ingress
-resources:
-- src.yaml
