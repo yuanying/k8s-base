@@ -1,5 +1,12 @@
 commonLabels:
   app: cert-manager
 resources:
-- 00-crds.yaml
-- src.yaml
+- cert-manager.yaml
+patchesJson6902:
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: cert-manager
+    namespace: cert-manager
+  path: patch.json

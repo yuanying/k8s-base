@@ -1,0 +1,5 @@
+[
+    {"op": "add", "path": "/spec/template/spec/containers/0/args/0", "value": "--default-issuer-name=letsencrypt-prod"},
+    {"op": "add", "path": "/spec/template/spec/containers/0/args/0", "value": "--default-issuer-kind=ClusterIssuer"},
+    {"op": "add", "path": "/spec/template/spec/containers/0/args/0", "value": "--default-issuer-group=cert-manager.io"}
+]
