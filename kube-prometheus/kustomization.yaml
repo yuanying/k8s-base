@@ -1,0 +1,20 @@
+resources:
+- base/
+- ingress.yaml
+
+configMapGenerator:
+- name: kp-config
+  namespace: monitoring
+  literals:
+  - DOMAIN=example.com
+vars:
+- name: DOMAIN
+  objref:
+    kind: ConfigMap
+    name: kp-config
+    namespace: monitoring
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.DOMAIN
+configurations:
+- varReference.yaml

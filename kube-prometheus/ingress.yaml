@@ -1,0 +1,69 @@
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: monitoring
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  labels:
+    app: grafana
+spec:
+  rules:
+  - host: grafana.$(DOMAIN)
+    http:
+      paths:
+      - backend:
+          serviceName: grafana
+          servicePort: 3000
+  tls:
+    - hosts:
+      - grafana.$(DOMAIN)
+      secretName: grafana-tls
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: prometheus
+  namespace: monitoring
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  labels:
+    app: prometheus
+spec:
+  rules:
+  - host: prometheus.$(DOMAIN)
+    http:
+      paths:
+      - backend:
+          serviceName: prometheus-k8s
+          servicePort: 9090
+  tls:
+    - hosts:
+      - prometheus.$(DOMAIN)
+      secretName: prometheus-tls
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: alertmanager
+  namespace: monitoring
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  labels:
+    app: alertmanager
+spec:
+  rules:
+  - host: alertmanager.$(DOMAIN)
+    http:
+      paths:
+      - backend:
+          serviceName: alertmanager-main
+          servicePort: 9093
+  tls:
+    - hosts:
+      - alertmanager.$(DOMAIN)
+      secretName: alertmanager-tls
