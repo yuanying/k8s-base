@@ -1,14 +1,13 @@
 ---
-# Source: nginx-ingress/templates/podsecuritypolicy.yaml
-
-apiVersion: extensions/v1beta1
+# Source: nginx-ingress/templates/controller-psp.yaml
+apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
-  name: ing-nginx-ingress 
+  name: ing-nginx-ingress
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.17.1
-    heritage: Tiller
+    chart: nginx-ingress-1.36.3
+    heritage: Helm
     release: ing
 spec:
   allowedCapabilities:
@@ -19,7 +18,7 @@ spec:
   volumes:
     - 'configMap'
     #- 'emptyDir'
-    #- 'projected'
+    - 'projected'
     - 'secret'
     #- 'downwardAPI'
   hostNetwork: false
@@ -43,30 +42,91 @@ spec:
   readOnlyRootFilesystem: false
   seLinux:
     rule: 'RunAsAny'
-  hostPorts:
+---
+# Source: nginx-ingress/templates/default-backend-psp.yaml
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: ing-nginx-ingress-backend
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.36.3
+    heritage: Helm
+    release: ing
+spec:
+  allowPrivilegeEscalation: false
+  fsGroup:
+    ranges:
     - max: 65535
       min: 1
-
+    rule: MustRunAs
+  requiredDropCapabilities:
+  - ALL
+  runAsUser:
+    rule: MustRunAsNonRoot
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    ranges:
+    - max: 65535
+      min: 1
+    rule: MustRunAs
+  volumes:
+  - configMap
+  - emptyDir
+  - projected
+  - secret
+  - downwardAPI
 ---
-# Source: nginx-ingress/templates/serviceaccount.yaml
+# Source: nginx-ingress/templates/controller-poddisruptionbudget.yaml
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.36.3
+    app.kubernetes.io/component: controller
+    heritage: Helm
+    release: ing
+  name: ing-nginx-ingress-controller
+spec:
+  selector:
+    matchLabels:
+      app: nginx-ingress
+      release: ing
+      app.kubernetes.io/component: controller
+  minAvailable: 1
+---
+# Source: nginx-ingress/templates/controller-serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.17.1
-    heritage: Tiller
+    chart: nginx-ingress-1.36.3
+    heritage: Helm
     release: ing
   name: ing-nginx-ingress
 ---
+# Source: nginx-ingress/templates/default-backend-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.36.3
+    heritage: Helm
+    release: ing
+  name: ing-nginx-ingress-backend
+---
 # Source: nginx-ingress/templates/clusterrole.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.17.1
-    heritage: Tiller
+    chart: nginx-ingress-1.36.3
+    heritage: Helm
     release: ing
   name: ing-nginx-ingress
 rules:
@@ -121,13 +181,13 @@ rules:
       - update
 ---
 # Source: nginx-ingress/templates/clusterrolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.17.1
-    heritage: Tiller
+    chart: nginx-ingress-1.36.3
+    heritage: Helm
     release: ing
   name: ing-nginx-ingress
 roleRef:
@@ -139,14 +199,14 @@ subjects:
     name: ing-nginx-ingress
     namespace: ingress
 ---
-# Source: nginx-ingress/templates/role.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
+# Source: nginx-ingress/templates/controller-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.17.1
-    heritage: Tiller
+    chart: nginx-ingress-1.36.3
+    heritage: Helm
     release: ing
   name: ing-nginx-ingress
 rules:
@@ -222,19 +282,35 @@ rules:
     verbs:
       - create
       - patch
-  - apiGroups:      ['extensions']
+  - apiGroups:      ['policy']
     resources:      ['podsecuritypolicies']
     verbs:          ['use']
     resourceNames:  [ing-nginx-ingress]
 ---
-# Source: nginx-ingress/templates/rolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
+# Source: nginx-ingress/templates/default-backend-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.36.3
+    heritage: Helm
+    release: ing
+  name: ing-nginx-ingress-backend
+rules:
+  - apiGroups:      ['policy']
+    resources:      ['podsecuritypolicies']
+    verbs:          ['use']
+    resourceNames:  [ing-nginx-ingress-backend]
+---
+# Source: nginx-ingress/templates/controller-rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.17.1
-    heritage: Tiller
+    chart: nginx-ingress-1.36.3
+    heritage: Helm
     release: ing
   name: ing-nginx-ingress
 roleRef:
@@ -246,19 +322,37 @@ subjects:
     name: ing-nginx-ingress
     namespace: ingress
 ---
+# Source: nginx-ingress/templates/default-backend-rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.36.3
+    heritage: Helm
+    release: ing
+  name: ing-nginx-ingress-backend
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ing-nginx-ingress-backend
+subjects:
+  - kind: ServiceAccount
+    name: ing-nginx-ingress-backend
+    namespace: ingress
+---
 # Source: nginx-ingress/templates/controller-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.17.1
+    chart: nginx-ingress-1.36.3
     component: "controller"
-    heritage: Tiller
+    heritage: Helm
     release: ing
   name: ing-nginx-ingress-controller
 spec:
-  clusterIP: ""
   loadBalancerIP: "192.168.1.200"
   ports:
     - name: http
@@ -271,25 +365,22 @@ spec:
       targetPort: https
   selector:
     app: nginx-ingress
-    component: "controller"
     release: ing
+    app.kubernetes.io/component: controller
   type: "LoadBalancer"
-
 ---
 # Source: nginx-ingress/templates/default-backend-service.yaml
-
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.17.1
+    chart: nginx-ingress-1.36.3
     component: "default-backend"
-    heritage: Tiller
+    heritage: Helm
     release: ing
   name: ing-nginx-ingress-default-backend
 spec:
-  clusterIP: ""
   ports:
     - name: http
       port: 80
@@ -297,43 +388,47 @@ spec:
       targetPort: http
   selector:
     app: nginx-ingress
-    component: "default-backend"
     release: ing
+    app.kubernetes.io/component: default-backend
   type: "ClusterIP"
-
 ---
 # Source: nginx-ingress/templates/controller-deployment.yaml
-
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.17.1
-    component: "controller"
-    heritage: Tiller
+    chart: nginx-ingress-1.36.3
+    heritage: Helm
     release: ing
+    app.kubernetes.io/component: controller
   name: ing-nginx-ingress-controller
+  annotations:
+    {}
 spec:
-  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-ingress
+      release: ing
+  replicas: 3
   revisionHistoryLimit: 10
   strategy:
     rollingUpdate:
       maxUnavailable: 1
     type: RollingUpdate
-    
   minReadySeconds: 0
   template:
     metadata:
       labels:
         app: nginx-ingress
-        component: "controller"
         release: ing
+        component: "controller"
+        app.kubernetes.io/component: controller
     spec:
       dnsPolicy: ClusterFirst
       containers:
         - name: nginx-ingress-controller
-          image: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.25.1"
+          image: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0"
           imagePullPolicy: "IfNotPresent"
           args:
             - /nginx-ingress-controller
@@ -348,7 +443,7 @@ spec:
                 - ALL
                 add:
                 - NET_BIND_SERVICE
-            runAsUser: 33
+            runAsUser: 101
             allowPrivilegeEscalation: true
           env:
             - name: POD_NAME
@@ -393,33 +488,34 @@ spec:
             requests:
               cpu: 100m
               memory: 64Mi
-            
       hostNetwork: false
       serviceAccountName: ing-nginx-ingress
       terminationGracePeriodSeconds: 60
-
 ---
 # Source: nginx-ingress/templates/default-backend-deployment.yaml
-
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.17.1
-    component: "default-backend"
-    heritage: Tiller
+    chart: nginx-ingress-1.36.3
+    heritage: Helm
     release: ing
+    app.kubernetes.io/component: default-backend
   name: ing-nginx-ingress-default-backend
 spec:
+  selector:
+    matchLabels:
+      app: nginx-ingress
+      release: ing
   replicas: 1
   revisionHistoryLimit: 10
   template:
     metadata:
       labels:
         app: nginx-ingress
-        component: "default-backend"
         release: ing
+        app.kubernetes.io/component: default-backend
     spec:
       containers:
         - name: nginx-ingress-default-backend
@@ -459,54 +555,5 @@ spec:
             requests:
               cpu: 10m
               memory: 20Mi
-            
+      serviceAccountName: ing-nginx-ingress-backend
       terminationGracePeriodSeconds: 60
-
----
-# Source: nginx-ingress/templates/addheaders-configmap.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-configmap.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-daemonset.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-hpa.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-metrics-service.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-poddisruptionbudget.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-prometheusrules.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-servicemonitor.yaml
-
-
----
-# Source: nginx-ingress/templates/default-backend-poddisruptionbudget.yaml
-
-
----
-# Source: nginx-ingress/templates/proxyheaders-configmap.yaml
-
-
----
-# Source: nginx-ingress/templates/tcp-configmap.yaml
-
-
----
-# Source: nginx-ingress/templates/udp-configmap.yaml
-
-

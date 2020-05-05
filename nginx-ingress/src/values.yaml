@@ -6,10 +6,15 @@ controller:
     loadBalancerIP: "192.168.1.200"
   stats:
     enabled: true
+  replicaCount: 3
+
+  # autoscaling:
+  #   enabled: true
+  #   minReplicas: 2
   # config:
   #   proxy-real-ip-cidr: "192.168.1.0/24"
   image:
-    tag: "0.25.1"
+    tag: "0.30.0"
 
   extraArgs:
     enable-ssl-passthrough:
