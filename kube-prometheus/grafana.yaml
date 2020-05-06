@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  template:
+    spec:
+      containers:
+      - name: grafana
+        volumeMounts:
+        - mountPath: /grafana-dashboard-definitions/0/k8s-cluster-overview
+          name: grafana-dashboard-k8s-cluster-overview
+          readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/zfs-exporter-metrics
+          name: grafana-dashboard-zfs-exporter-metrics
+      volumes:
+      - name: grafana-dashboard-k8s-cluster-overview
+        configMap:
+          name: grafana-dashboard-k8s-cluster-overview
+      - name: grafana-dashboard-zfs-exporter-metrics
+        configMap:
+          name: grafana-dashboard-zfs-exporter-metrics

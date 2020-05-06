@@ -1,6 +1,8 @@
 resources:
 - base/
+- grafana-base/
 - ingress.yaml
+- prometheus-additional.yaml
 - smart-mon-exporter.yaml
 - zfs-exporter.yaml
 
@@ -33,6 +35,8 @@ patchesJSON6902:
       path: /spec/template/spec/containers/0/args/0
       value: '--collector.textfile.directory=/srv/txt_collector'
 patchesStrategicMerge:
+- prometheus.yaml
+- grafana.yaml
 - |-
   apiVersion: apps/v1
   kind: DaemonSet

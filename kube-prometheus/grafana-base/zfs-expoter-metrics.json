@@ -1,0 +1,745 @@
+{
+    "__inputs": [
+      {
+        "name": "DS_PROMETHEUS",
+        "label": "prometheus",
+        "description": "",
+        "type": "datasource",
+        "pluginId": "prometheus",
+        "pluginName": "Prometheus"
+      }
+    ],
+    "__requires": [
+      {
+        "type": "panel",
+        "id": "text",
+        "name": "Text",
+        "version": ""
+      },
+      {
+        "type": "panel",
+        "id": "graph",
+        "name": "Graph",
+        "version": ""
+      },
+      {
+        "type": "grafana",
+        "id": "grafana",
+        "name": "Grafana",
+        "version": "3.1.1"
+      },
+      {
+        "type": "datasource",
+        "id": "prometheus",
+        "name": "Prometheus",
+        "version": "1.0.0"
+      }
+    ],
+    "id": null,
+    "title": "ZFS",
+    "tags": [],
+    "style": "dark",
+    "timezone": "browser",
+    "editable": true,
+    "hideControls": false,
+    "sharedCrosshair": false,
+    "rows": [
+      {
+        "title": "New row",
+        "height": "100px",
+        "editable": true,
+        "collapse": false,
+        "panels": [
+          {
+            "title": "ZFS zpool stats",
+            "error": false,
+            "span": 12,
+            "editable": true,
+            "type": "text",
+            "isNew": true,
+            "id": 13,
+            "mode": "markdown",
+            "content": "Pool status: 0=online, 1=exported, 2=destroyed, 3=spare, 4=l2arc.\n\nPool state: 19=legacy on-disk version, 20=features disabled, 21=resilvering, 22=device offline, 23=device removed, 24=OK.",
+            "links": []
+          }
+        ]
+      },
+      {
+        "collapse": false,
+        "editable": true,
+        "height": "250px",
+        "panels": [
+          {
+            "aliasColors": {},
+            "bars": false,
+            "datasource": "${DS_PROMETHEUS}",
+            "editable": true,
+            "error": false,
+            "fill": 1,
+            "grid": {
+              "threshold1": null,
+              "threshold1Color": "rgba(216, 200, 27, 0.27)",
+              "threshold2": null,
+              "threshold2Color": "rgba(234, 112, 112, 0.22)"
+            },
+            "id": 9,
+            "isNew": true,
+            "legend": {
+              "avg": false,
+              "current": false,
+              "max": false,
+              "min": false,
+              "show": true,
+              "total": false,
+              "values": false,
+              "hideEmpty": true,
+              "hideZero": true
+            },
+            "lines": true,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "connected",
+            "percentage": false,
+            "pointradius": 5,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "span": 4,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "rate(zfs_zpool_collecterrors{poolname=~\"$pool\"}[$interval])",
+                "intervalFactor": 2,
+                "legendFormat": "{{poolname}}",
+                "metric": "zfs_zpool_collecterrors",
+                "refId": "A",
+                "step": 20
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "$pool Pool Collection Errors",
+            "tooltip": {
+              "msResolution": false,
+              "shared": true,
+              "sort": 0,
+              "value_type": "cumulative"
+            },
+            "type": "graph",
+            "xaxis": {
+              "show": true
+            },
+            "yaxes": [
+              {
+                "format": "short",
+                "label": null,
+                "logBase": 1,
+                "max": null,
+                "min": 0,
+                "show": true
+              },
+              {
+                "format": "short",
+                "label": null,
+                "logBase": 1,
+                "max": null,
+                "min": null,
+                "show": true
+              }
+            ]
+          },
+          {
+            "aliasColors": {},
+            "bars": false,
+            "datasource": "${DS_PROMETHEUS}",
+            "editable": true,
+            "error": false,
+            "fill": 1,
+            "grid": {
+              "threshold1": null,
+              "threshold1Color": "rgba(216, 200, 27, 0.27)",
+              "threshold2": null,
+              "threshold2Color": "rgba(234, 112, 112, 0.22)"
+            },
+            "id": 4,
+            "isNew": true,
+            "legend": {
+              "avg": false,
+              "current": false,
+              "hideEmpty": true,
+              "hideZero": true,
+              "max": false,
+              "min": false,
+              "show": true,
+              "total": false,
+              "values": false
+            },
+            "lines": true,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "connected",
+            "percentage": false,
+            "pointradius": 5,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "span": 4,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "rate(zfs_zpool_errors_total{poolname=~\"$pool\", vdevtype=\"root\"}[$interval])",
+                "intervalFactor": 2,
+                "legendFormat": "{{poolname}} {{errortype}}",
+                "metric": "zfs_zpool_vdevops",
+                "refId": "A",
+                "step": 20
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "$pool Pool Error Rate",
+            "tooltip": {
+              "msResolution": false,
+              "shared": true,
+              "sort": 0,
+              "value_type": "cumulative"
+            },
+            "type": "graph",
+            "xaxis": {
+              "show": true
+            },
+            "yaxes": [
+              {
+                "format": "short",
+                "label": null,
+                "logBase": 1,
+                "max": null,
+                "min": 0,
+                "show": true
+              },
+              {
+                "format": "short",
+                "label": null,
+                "logBase": 1,
+                "max": null,
+                "min": null,
+                "show": true
+              }
+            ]
+          },
+          {
+            "aliasColors": {},
+            "bars": false,
+            "datasource": "${DS_PROMETHEUS}",
+            "editable": true,
+            "error": false,
+            "fill": 1,
+            "grid": {
+              "threshold1": null,
+              "threshold1Color": "rgba(216, 200, 27, 0.27)",
+              "threshold2": null,
+              "threshold2Color": "rgba(234, 112, 112, 0.22)"
+            },
+            "id": 5,
+            "isNew": true,
+            "legend": {
+              "avg": false,
+              "current": true,
+              "hideEmpty": true,
+              "hideZero": false,
+              "max": false,
+              "min": false,
+              "show": true,
+              "total": false,
+              "values": true,
+              "alignAsTable": true
+            },
+            "lines": false,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "null",
+            "percentage": false,
+            "pointradius": 5,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [
+              {
+                "alias": "/.*state/",
+                "yaxis": 1
+              },
+              {
+                "alias": "/.*status/",
+                "yaxis": 2
+              }
+            ],
+            "span": 4,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "zfs_zpool_poolstate{poolname=~\"$pool\"}",
+                "hide": false,
+                "intervalFactor": 2,
+                "legendFormat": "{{poolname}} state",
+                "metric": "zfs_zpool_poolstate",
+                "refId": "A",
+                "step": 20
+              },
+              {
+                "expr": "zfs_zpool_poolstatus{poolname=~\"$pool\"}",
+                "hide": false,
+                "intervalFactor": 2,
+                "legendFormat": "{{poolname}} status",
+                "metric": "zfs_zpool_poolstate",
+                "refId": "B",
+                "step": 20
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "$pool Pool state and status",
+            "tooltip": {
+              "msResolution": false,
+              "shared": true,
+              "sort": 0,
+              "value_type": "cumulative"
+            },
+            "type": "graph",
+            "xaxis": {
+              "show": true
+            },
+            "yaxes": [
+              {
+                "format": "short",
+                "label": "",
+                "logBase": 1,
+                "max": null,
+                "min": 0,
+                "show": true
+              },
+              {
+                "format": "short",
+                "label": null,
+                "logBase": 1,
+                "max": null,
+                "min": 0,
+                "show": true
+              }
+            ]
+          }
+        ],
+        "title": "New row"
+      },
+      {
+        "collapse": false,
+        "editable": true,
+        "height": "250px",
+        "panels": [
+          {
+            "aliasColors": {
+              "Read": "#7EB26D",
+              "Write": "#EAB839"
+            },
+            "bars": true,
+            "datasource": "${DS_PROMETHEUS}",
+            "editable": true,
+            "error": false,
+            "fill": 1,
+            "grid": {
+              "threshold1": null,
+              "threshold1Color": "rgba(216, 200, 27, 0.27)",
+              "threshold2": null,
+              "threshold2Color": "rgba(234, 112, 112, 0.22)"
+            },
+            "id": 1,
+            "isNew": true,
+            "legend": {
+              "avg": false,
+              "current": false,
+              "hideEmpty": true,
+              "hideZero": true,
+              "max": false,
+              "min": false,
+              "show": true,
+              "total": false,
+              "values": false
+            },
+            "lines": false,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "connected",
+            "percentage": false,
+            "pointradius": 5,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "span": 4,
+            "stack": true,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "irate(zfs_zpool_vdevops_total{poolname=~\"$pool\", vdevtype=\"root\"}[10m])",
+                "intervalFactor": 2,
+                "legendFormat": "{{vdevoptype}}",
+                "metric": "zfs_zpool_vdevops",
+                "refId": "A",
+                "step": 20
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "$pool Op Rate",
+            "tooltip": {
+              "msResolution": false,
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "show": true
+            },
+            "yaxes": [
+              {
+                "format": "short",
+                "label": null,
+                "logBase": 1,
+                "max": null,
+                "min": null,
+                "show": true
+              },
+              {
+                "format": "short",
+                "label": null,
+                "logBase": 1,
+                "max": null,
+                "min": null,
+                "show": true
+              }
+            ],
+            "scopedVars": {},
+            "repeatIteration": 1471204776919
+          },
+          {
+            "aliasColors": {
+              "Read": "#7EB26D",
+              "Write": "#EAB839"
+            },
+            "bars": true,
+            "datasource": "${DS_PROMETHEUS}",
+            "editable": true,
+            "error": false,
+            "fill": 1,
+            "grid": {
+              "threshold1": null,
+              "threshold1Color": "rgba(216, 200, 27, 0.27)",
+              "threshold2": null,
+              "threshold2Color": "rgba(234, 112, 112, 0.22)"
+            },
+            "id": 8,
+            "isNew": true,
+            "legend": {
+              "avg": false,
+              "current": false,
+              "hideEmpty": true,
+              "hideZero": true,
+              "max": false,
+              "min": false,
+              "show": true,
+              "total": false,
+              "values": false
+            },
+            "lines": false,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "connected",
+            "percentage": false,
+            "pointradius": 5,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "span": 4,
+            "stack": true,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "rate(zfs_zpool_vdevbytes_total{poolname =~ \"$pool\", vdevtype=\"root\"}[10m])",
+                "intervalFactor": 2,
+                "legendFormat": "{{vdevoptype}}",
+                "metric": "zfs_zpool_vdevops",
+                "refId": "A",
+                "step": 20
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "$pool Byte Rate",
+            "tooltip": {
+              "msResolution": false,
+              "shared": true,
+              "sort": 1,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "show": true
+            },
+            "yaxes": [
+              {
+                "format": "Bps",
+                "label": null,
+                "logBase": 1,
+                "max": null,
+                "min": null,
+                "show": true
+              },
+              {
+                "format": "short",
+                "label": null,
+                "logBase": 1,
+                "max": null,
+                "min": null,
+                "show": true
+              }
+            ],
+            "scopedVars": {},
+            "repeatIteration": 1471204776919
+          },
+          {
+            "aliasColors": {},
+            "bars": false,
+            "datasource": "${DS_PROMETHEUS}",
+            "editable": true,
+            "error": false,
+            "fill": 1,
+            "grid": {
+              "threshold1": null,
+              "threshold1Color": "rgba(216, 200, 27, 0.27)",
+              "threshold2": null,
+              "threshold2Color": "rgba(234, 112, 112, 0.22)"
+            },
+            "id": 3,
+            "isNew": true,
+            "legend": {
+              "avg": false,
+              "current": false,
+              "hideEmpty": true,
+              "hideZero": false,
+              "max": false,
+              "min": false,
+              "show": true,
+              "total": false,
+              "values": false
+            },
+            "lines": true,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "connected",
+            "percentage": false,
+            "pointradius": 5,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "span": 4,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "zfs_zpool_allocated_bytes{ vdevtype=\"root\"}",
+                "hide": true,
+                "intervalFactor": 2,
+                "legendFormat": "{{poolname}} allocated",
+                "metric": "zfs_zpool_vdevops",
+                "refId": "A",
+                "step": 4
+              },
+              {
+                "expr": "zfs_zpool_space_bytes{ vdevtype=\"root\"}",
+                "hide": true,
+                "intervalFactor": 2,
+                "legendFormat": "{{poolname}} space",
+                "metric": "zfs_zpool_vdevops",
+                "refId": "B",
+                "step": 4
+              },
+              {
+                "expr": "zfs_zpool_space_bytes{ vdevtype=\"root\", poolname =~ \"$pool\"} - zfs_zpool_allocated_bytes{ vdevtype=\"root\"}",
+                "intervalFactor": 2,
+                "legendFormat": "{{poolname}} avail",
+                "metric": "zfs_zpool_vdevops",
+                "refId": "C",
+                "step": 20
+              }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "$pool Pool Space",
+            "tooltip": {
+              "msResolution": false,
+              "shared": true,
+              "sort": 0,
+              "value_type": "cumulative"
+            },
+            "type": "graph",
+            "xaxis": {
+              "show": true
+            },
+            "yaxes": [
+              {
+                "format": "bytes",
+                "label": null,
+                "logBase": 1,
+                "max": null,
+                "min": null,
+                "show": true
+              },
+              {
+                "format": "short",
+                "label": null,
+                "logBase": 1,
+                "max": null,
+                "min": null,
+                "show": true
+              }
+            ],
+            "scopedVars": {},
+            "repeatIteration": 1471204776919
+          }
+        ],
+        "title": "Row",
+        "repeat": "pool",
+        "scopedVars": {
+          "pool": {
+            "text": "pool6",
+            "value": "pool6",
+            "selected": false
+          }
+        }
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ]
+    },
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "tags": [],
+            "text": "1m",
+            "value": "1m"
+          },
+          "datasource": null,
+          "hide": 0,
+          "includeAll": false,
+          "multi": false,
+          "name": "interval",
+          "options": [
+            {
+              "selected": false,
+              "text": "1m",
+              "value": "1m"
+            },
+            {
+              "selected": true,
+              "text": "10m",
+              "value": "10m"
+            },
+            {
+              "selected": false,
+              "text": "30m",
+              "value": "30m"
+            },
+            {
+              "selected": false,
+              "text": "1h",
+              "value": "1h"
+            },
+            {
+              "selected": false,
+              "text": "6h",
+              "value": "6h"
+            },
+            {
+              "selected": false,
+              "text": "12h",
+              "value": "12h"
+            },
+            {
+              "selected": false,
+              "text": "1d",
+              "value": "1d"
+            },
+            {
+              "selected": false,
+              "text": "7d",
+              "value": "7d"
+            },
+            {
+              "selected": false,
+              "text": "14d",
+              "value": "14d"
+            },
+            {
+              "selected": false,
+              "text": "30d",
+              "value": "30d"
+            }
+          ],
+          "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+          "refresh": 0,
+          "type": "interval"
+        },
+        {
+          "type": "query",
+          "datasource": "${DS_PROMETHEUS}",
+          "refresh": 1,
+          "name": "pool",
+          "hide": 0,
+          "options": [],
+          "includeAll": true,
+          "multi": true,
+          "query": "label_values(zfs_zpool_poolstatus,poolname)",
+          "current": {},
+          "regex": "",
+          "allValue": ".+"
+        }
+      ]
+    },
+    "annotations": {
+      "list": []
+    },
+    "refresh": "10s",
+    "schemaVersion": 12,
+    "version": 4,
+    "links": [],
+    "gnetId": 328,
+    "description": "ZFS Zpool metrics as produced by https://github.com/ncabatoff/zfs-exporter"
+  }

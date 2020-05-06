@@ -1,0 +1,2349 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": 4,
+    "iteration": 1543280177975,
+    "links": [],
+    "panels": [
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 123,
+        "panels": [],
+        "repeat": "role",
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "worker",
+            "value": "worker"
+          }
+        },
+        "title": "[[role]]",
+        "type": "row"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "$datasource",
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 2,
+          "x": 0,
+          "y": 1
+        },
+        "id": 1,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "worker",
+            "value": "worker"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "count(kube_node_labels{label_role=\"[[role]]\"})",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "",
+        "title": "Nodes",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "$datasource",
+        "description": "",
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 2,
+          "x": 2,
+          "y": 1
+        },
+        "id": 4,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "worker",
+            "value": "worker"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "sum (machine_cpu_cores{role=\"[[role]]\"})",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "",
+        "title": "CPU Cores",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "$datasource",
+        "decimals": 0,
+        "format": "bytes",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 2,
+          "x": 4,
+          "y": 1
+        },
+        "id": 5,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "worker",
+            "value": "worker"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "sum (machine_memory_bytes{role=\"[[role]]\"})",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "",
+        "title": "Memory",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": true,
+        "colors": [
+          "rgba(50, 172, 45, 0.97)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(245, 54, 54, 0.9)"
+        ],
+        "datasource": "$datasource",
+        "decimals": 2,
+        "format": "percent",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": true,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 4,
+          "x": 6,
+          "y": 1
+        },
+        "id": 2,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "worker",
+            "value": "worker"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": true
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "sum(\n    rate( node_cpu_seconds_total{mode!=\"idle\"}[5m] ) * on (instance) group_left(label_role)\n        max by (instance,label_role) (\n            label_replace(kube_node_labels{label_role=\"[[role]]\"}, \"instance\",\"$1\",\"node\",\"(.*)\")\n        )\n) / sum (machine_cpu_cores{role=\"[[role]]\"}) * 100",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "65, 90",
+        "title": "CPU Usage",
+        "transparent": false,
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": true,
+        "colors": [
+          "rgba(50, 172, 45, 0.97)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(245, 54, 54, 0.9)"
+        ],
+        "datasource": "$datasource",
+        "decimals": 2,
+        "format": "percent",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": true,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 4,
+          "x": 10,
+          "y": 1
+        },
+        "id": 3,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "worker",
+            "value": "worker"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": true
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "(1 - sum(\n    node_memory_MemAvailable_bytes * on (instance) group_left(label_role)\n        max by (instance,label_role) (\n            label_replace(kube_node_labels{label_role=\"[[role]]\"}, \"instance\",\"$1\",\"node\",\"(.*)\")\n        )\n) / sum (machine_memory_bytes{role=\"[[role]]\"})) * 100",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "65, 90",
+        "title": "Memory",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "$datasource",
+        "fill": 1,
+        "gridPos": {
+          "h": 5,
+          "w": 10,
+          "x": 14,
+          "y": 1
+        },
+        "id": 47,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "worker",
+            "value": "worker"
+          }
+        },
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "sum(irate( node_network_receive_bytes_total[5m] ) * on (instance) group_left(label_role)\n    max by (instance,label_role) (\n        label_replace(kube_node_labels{label_role=\"[[role]]\"}, \"instance\",\"$1\",\"node\",\"(.*)\")\n    ))",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "Received",
+            "refId": "A",
+            "step": 120
+          },
+          {
+            "expr": "sum(irate( node_network_transmit_bytes_total[5m] ) * on (instance) group_left(label_role)\n    max by (instance,label_role) (\n        label_replace(kube_node_labels{label_role=\"[[role]]\"}, \"instance\",\"$1\",\"node\",\"(.*)\")\n    ))",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "Sent",
+            "metric": "",
+            "refId": "B",
+            "step": 120
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Network",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 6
+        },
+        "id": 126,
+        "panels": [],
+        "repeat": null,
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 123,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "backup",
+            "value": "backup"
+          }
+        },
+        "title": "[[role]]",
+        "type": "row"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "$datasource",
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 2,
+          "x": 0,
+          "y": 7
+        },
+        "id": 127,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 1,
+        "repeatedByRow": true,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "backup",
+            "value": "backup"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "count(kube_node_labels{label_role=\"[[role]]\"})",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "",
+        "title": "Nodes",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "$datasource",
+        "description": "",
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 2,
+          "x": 2,
+          "y": 7
+        },
+        "id": 128,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 4,
+        "repeatedByRow": true,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "backup",
+            "value": "backup"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "sum (machine_cpu_cores{role=\"[[role]]\"})",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "",
+        "title": "CPU Cores",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "$datasource",
+        "decimals": 0,
+        "format": "bytes",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 2,
+          "x": 4,
+          "y": 7
+        },
+        "id": 129,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 5,
+        "repeatedByRow": true,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "backup",
+            "value": "backup"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "sum (machine_memory_bytes{role=\"[[role]]\"})",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "",
+        "title": "Memory",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": true,
+        "colors": [
+          "rgba(50, 172, 45, 0.97)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(245, 54, 54, 0.9)"
+        ],
+        "datasource": "$datasource",
+        "decimals": 2,
+        "format": "percent",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": true,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 4,
+          "x": 6,
+          "y": 7
+        },
+        "id": 130,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 2,
+        "repeatedByRow": true,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "backup",
+            "value": "backup"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": true
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "sum(\n    rate( node_cpu_seconds_total{mode!=\"idle\"}[5m] ) * on (instance) group_left(label_role)\n        max by (instance,label_role) (\n            label_replace(kube_node_labels{label_role=\"[[role]]\"}, \"instance\",\"$1\",\"node\",\"(.*)\")\n        )\n) / sum (machine_cpu_cores{role=\"[[role]]\"}) * 100",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "65, 90",
+        "title": "CPU Usage",
+        "transparent": false,
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": true,
+        "colors": [
+          "rgba(50, 172, 45, 0.97)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(245, 54, 54, 0.9)"
+        ],
+        "datasource": "$datasource",
+        "decimals": 2,
+        "format": "percent",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": true,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 4,
+          "x": 10,
+          "y": 7
+        },
+        "id": 131,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 3,
+        "repeatedByRow": true,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "backup",
+            "value": "backup"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": true
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "(1 - sum(\n    node_memory_MemAvailable_bytes * on (instance) group_left(label_role)\n        max by (instance,label_role) (\n            label_replace(kube_node_labels{label_role=\"[[role]]\"}, \"instance\",\"$1\",\"node\",\"(.*)\")\n        )\n) / sum (machine_memory_bytes{role=\"[[role]]\"})) * 100",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "65, 90",
+        "title": "Memory",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "$datasource",
+        "fill": 1,
+        "gridPos": {
+          "h": 5,
+          "w": 10,
+          "x": 14,
+          "y": 7
+        },
+        "id": 132,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 47,
+        "repeatedByRow": true,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "backup",
+            "value": "backup"
+          }
+        },
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "sum(irate( node_network_receive_bytes_total[5m] ) * on (instance) group_left(label_role)\n    max by (instance,label_role) (\n        label_replace(kube_node_labels{label_role=\"[[role]]\"}, \"instance\",\"$1\",\"node\",\"(.*)\")\n    ))",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "Received",
+            "refId": "A",
+            "step": 120
+          },
+          {
+            "expr": "sum(irate( node_network_transmit_bytes_total[5m] ) * on (instance) group_left(label_role)\n    max by (instance,label_role) (\n        label_replace(kube_node_labels{label_role=\"[[role]]\"}, \"instance\",\"$1\",\"node\",\"(.*)\")\n    ))",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "Sent",
+            "metric": "",
+            "refId": "B",
+            "step": 120
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Network",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 12
+        },
+        "id": 133,
+        "panels": [],
+        "repeat": null,
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 123,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "master",
+            "value": "master"
+          }
+        },
+        "title": "[[role]]",
+        "type": "row"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "$datasource",
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 2,
+          "x": 0,
+          "y": 13
+        },
+        "id": 134,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 1,
+        "repeatedByRow": true,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "master",
+            "value": "master"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "count(kube_node_labels{label_role=\"[[role]]\"})",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "",
+        "title": "Nodes",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "$datasource",
+        "description": "",
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 2,
+          "x": 2,
+          "y": 13
+        },
+        "id": 135,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 4,
+        "repeatedByRow": true,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "master",
+            "value": "master"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "sum (machine_cpu_cores{role=\"[[role]]\"})",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "",
+        "title": "CPU Cores",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "$datasource",
+        "decimals": 0,
+        "format": "bytes",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 2,
+          "x": 4,
+          "y": 13
+        },
+        "id": 136,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 5,
+        "repeatedByRow": true,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "master",
+            "value": "master"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "sum (machine_memory_bytes{role=\"[[role]]\"})",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "",
+        "title": "Memory",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": true,
+        "colors": [
+          "rgba(50, 172, 45, 0.97)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(245, 54, 54, 0.9)"
+        ],
+        "datasource": "$datasource",
+        "decimals": 2,
+        "format": "percent",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": true,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 4,
+          "x": 6,
+          "y": 13
+        },
+        "id": 137,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 2,
+        "repeatedByRow": true,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "master",
+            "value": "master"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": true
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "sum(\n    rate( node_cpu_seconds_total{mode!=\"idle\"}[5m] ) * on (instance) group_left(label_role)\n        max by (instance,label_role) (\n            label_replace(kube_node_labels{label_role=\"[[role]]\"}, \"instance\",\"$1\",\"node\",\"(.*)\")\n        )\n) / sum (machine_cpu_cores{role=\"[[role]]\"}) * 100",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "65, 90",
+        "title": "CPU Usage",
+        "transparent": false,
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": false,
+        "colorValue": true,
+        "colors": [
+          "rgba(50, 172, 45, 0.97)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(245, 54, 54, 0.9)"
+        ],
+        "datasource": "$datasource",
+        "decimals": 2,
+        "format": "percent",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": true,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 4,
+          "x": 10,
+          "y": 13
+        },
+        "id": 138,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 3,
+        "repeatedByRow": true,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "master",
+            "value": "master"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": true
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "(1 - sum(\n    node_memory_MemAvailable_bytes * on (instance) group_left(label_role)\n        max by (instance,label_role) (\n            label_replace(kube_node_labels{label_role=\"[[role]]\"}, \"instance\",\"$1\",\"node\",\"(.*)\")\n        )\n) / sum (machine_memory_bytes{role=\"[[role]]\"})) * 100",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 600
+          }
+        ],
+        "thresholds": "65, 90",
+        "title": "Memory",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "$datasource",
+        "fill": 1,
+        "gridPos": {
+          "h": 5,
+          "w": 10,
+          "x": 14,
+          "y": 13
+        },
+        "id": 139,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "repeatIteration": 1543280177975,
+        "repeatPanelId": 47,
+        "repeatedByRow": true,
+        "scopedVars": {
+          "role": {
+            "selected": false,
+            "text": "master",
+            "value": "master"
+          }
+        },
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "sum(irate( node_network_receive_bytes_total[5m] ) * on (instance) group_left(label_role)\n    max by (instance,label_role) (\n        label_replace(kube_node_labels{label_role=\"[[role]]\"}, \"instance\",\"$1\",\"node\",\"(.*)\")\n    ))",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "Received",
+            "refId": "A",
+            "step": 120
+          },
+          {
+            "expr": "sum(irate( node_network_transmit_bytes_total[5m] ) * on (instance) group_left(label_role)\n    max by (instance,label_role) (\n        label_replace(kube_node_labels{label_role=\"[[role]]\"}, \"instance\",\"$1\",\"node\",\"(.*)\")\n    ))",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "Sent",
+            "metric": "",
+            "refId": "B",
+            "step": 120
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Network",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 18
+        },
+        "id": 124,
+        "panels": [],
+        "repeat": null,
+        "title": "",
+        "type": "row"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "$datasource",
+        "fill": 1,
+        "gridPos": {
+          "h": 7,
+          "w": 8,
+          "x": 0,
+          "y": 19
+        },
+        "id": 106,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "count(kube_node_info) by (os_image, kubelet_version)",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "k8s {{kubelet_version}} / {{os_image}}",
+            "refId": "A",
+            "step": 120
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Nodes",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "$datasource",
+        "fill": 1,
+        "gridPos": {
+          "h": 7,
+          "w": 8,
+          "x": 8,
+          "y": 19
+        },
+        "id": 62,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "sum(kube_pod_status_phase) by (phase)",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "{{phase}}",
+            "refId": "A",
+            "step": 120
+          },
+          {
+            "expr": "",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "refId": "B"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Pods by phase",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "",
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "$datasource",
+        "fill": 1,
+        "gridPos": {
+          "h": 7,
+          "w": 8,
+          "x": 16,
+          "y": 19
+        },
+        "id": 76,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "sum(kube_pod_status_phase) by (namespace)",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "{{namespace}}",
+            "refId": "A",
+            "step": 120
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Pods by namespace",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 26
+        },
+        "id": 125,
+        "panels": [],
+        "repeat": null,
+        "title": "",
+        "type": "row"
+      },
+      {
+        "columns": [],
+        "datasource": "$datasource",
+        "fontSize": "90%",
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 0,
+          "y": 27
+        },
+        "hideTimeOverride": false,
+        "id": 121,
+        "links": [],
+        "pageSize": null,
+        "scroll": false,
+        "showHeader": true,
+        "sort": {
+          "col": 0,
+          "desc": true
+        },
+        "styles": [
+          {
+            "alias": "",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "link": false,
+            "linkUrl": "",
+            "pattern": "Time",
+            "type": "hidden"
+          },
+          {
+            "alias": "CPU Usage",
+            "colorMode": null,
+            "colors": [
+              "rgba(245, 54, 54, 0.9)",
+              "rgba(237, 129, 40, 0.89)",
+              "rgba(50, 172, 45, 0.97)"
+            ],
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "pattern": "Value",
+            "thresholds": [],
+            "type": "number",
+            "unit": "percentunit"
+          },
+          {
+            "alias": "Pod",
+            "colorMode": null,
+            "colors": [
+              "rgba(245, 54, 54, 0.9)",
+              "rgba(237, 129, 40, 0.89)",
+              "rgba(50, 172, 45, 0.97)"
+            ],
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "pattern": "pod_name",
+            "thresholds": [],
+            "type": "number",
+            "unit": "short"
+          },
+          {
+            "alias": "",
+            "colorMode": null,
+            "colors": [
+              "rgba(245, 54, 54, 0.9)",
+              "rgba(237, 129, 40, 0.89)",
+              "rgba(50, 172, 45, 0.97)"
+            ],
+            "decimals": 2,
+            "pattern": "/.*/",
+            "thresholds": [],
+            "type": "number",
+            "unit": "short"
+          }
+        ],
+        "targets": [
+          {
+            "expr": "sort(topk(5, sum (rate (container_cpu_usage_seconds_total{image!=\"\", container!=\"\", pod!=\"\"}[5m])) by (pod_name, namespace))) ",
+            "format": "table",
+            "instant": true,
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "timeFrom": null,
+        "title": "Top 5 Pod CPU Usage",
+        "transform": "table",
+        "type": "table"
+      },
+      {
+        "columns": [],
+        "datasource": "$datasource",
+        "fontSize": "90%",
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 12,
+          "y": 27
+        },
+        "id": 122,
+        "links": [],
+        "pageSize": null,
+        "scroll": true,
+        "showHeader": true,
+        "sort": {
+          "col": 0,
+          "desc": true
+        },
+        "styles": [
+          {
+            "alias": "Time",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "pattern": "Time",
+            "type": "hidden"
+          },
+          {
+            "alias": "Pod",
+            "colorMode": null,
+            "colors": [
+              "rgba(245, 54, 54, 0.9)",
+              "rgba(237, 129, 40, 0.89)",
+              "rgba(50, 172, 45, 0.97)"
+            ],
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "pattern": "pod_name",
+            "thresholds": [],
+            "type": "number",
+            "unit": "short"
+          },
+          {
+            "alias": "Memory",
+            "colorMode": null,
+            "colors": [
+              "rgba(245, 54, 54, 0.9)",
+              "rgba(237, 129, 40, 0.89)",
+              "rgba(50, 172, 45, 0.97)"
+            ],
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "pattern": "Value",
+            "thresholds": [],
+            "type": "number",
+            "unit": "bytes"
+          },
+          {
+            "alias": "",
+            "colorMode": null,
+            "colors": [
+              "rgba(245, 54, 54, 0.9)",
+              "rgba(237, 129, 40, 0.89)",
+              "rgba(50, 172, 45, 0.97)"
+            ],
+            "decimals": 2,
+            "pattern": "/.*/",
+            "thresholds": [],
+            "type": "number",
+            "unit": "short"
+          }
+        ],
+        "targets": [
+          {
+            "expr": "sort(topk(5, sum (container_memory_working_set_bytes{image!=\"\", container!=\"\", pod!=\"\"}) by (pod_name, namespace)))",
+            "format": "table",
+            "instant": true,
+            "intervalFactor": 2,
+            "refId": "A"
+          }
+        ],
+        "title": "Top 5 Pod Memory Usage",
+        "transform": "table",
+        "type": "table"
+      }
+    ],
+    "refresh": false,
+    "schemaVersion": 16,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+            "current": {
+                "text": "default",
+                "value": "default"
+            },
+            "hide": 0,
+            "label": null,
+            "name": "datasource",
+            "options": [
+
+            ],
+            "query": "prometheus",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+        },
+        {
+          "allValue": null,
+          "current": {
+            "tags": [],
+            "text": "All",
+            "value": "$__all"
+          },
+          "hide": 0,
+          "includeAll": true,
+          "label": null,
+          "multi": false,
+          "name": "role",
+          "options": [
+            {
+              "selected": true,
+              "text": "All",
+              "value": "$__all"
+            },
+            {
+              "selected": false,
+              "text": "worker",
+              "value": "worker"
+            },
+            {
+              "selected": false,
+              "text": "backup",
+              "value": "backup"
+            },
+            {
+              "selected": false,
+              "text": "master",
+              "value": "master"
+            }
+          ],
+          "query": "worker,backup,master",
+          "skipUrlSync": false,
+          "type": "custom"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ]
+    },
+    "timezone": "browser",
+    "title": "Kubernetes Cluster Overview",
+    "uid": "qUluFjHmz",
+    "version": 1
+  }

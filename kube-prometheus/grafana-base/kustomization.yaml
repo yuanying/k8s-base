@@ -1,0 +1,10 @@
+generatorOptions:
+  disableNameSuffixHash: true
+configMapGenerator:
+- name: grafana-dashboard-k8s-cluster-overview
+  files:
+  - kubernetes-cluster-overview.json
+- name: grafana-dashboard-zfs-exporter-metrics
+  files:
+  - zfs-expoter-metrics.json
+
