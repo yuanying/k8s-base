@@ -28,7 +28,7 @@ subjects:
 apiVersion: v1
 stringData:
   prometheus-additional.yaml: |-
-    - job_name: kubernetes-nodes
+    - job_name: kubelet
       scrape_interval: 1m
       scrape_timeout: 10s
       metrics_path: /metrics
@@ -55,7 +55,7 @@ stringData:
         target_label: __metrics_path__
         replacement: /api/v1/nodes/$1/proxy/metrics
         action: replace
-    - job_name: kubernetes-nodes-cadvisor
+    - job_name: kubelet-cadvisor
       scrape_interval: 1m
       scrape_timeout: 10s
       metrics_path: /metrics

@@ -1,3 +1,7 @@
 varReference:
 - path: spec/rules/host
   kind: Ingress
+- path: spec/externalUrl
+  kind: Prometheus
+- path: spec/externalUrl
+  kind: Alertmanager

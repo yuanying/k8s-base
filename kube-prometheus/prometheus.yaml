@@ -4,6 +4,7 @@ metadata:
   name: k8s
   namespace: monitoring
 spec:
+  externalUrl: https://prometheus.$(DOMAIN)/
   additionalScrapeConfigs:
     name: additional-scrape-configs
     key: prometheus-additional.yaml

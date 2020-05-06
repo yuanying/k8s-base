@@ -36,6 +36,7 @@ patchesJSON6902:
       value: '--collector.textfile.directory=/srv/txt_collector'
 patchesStrategicMerge:
 - prometheus.yaml
+- alertmanager.yaml
 - grafana.yaml
 - |-
   apiVersion: apps/v1
