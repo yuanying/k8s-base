@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: smart-exporter
+  labels:
+    app: smart-exporter
+spec:
+  selector:
+    matchLabels:
+      app: smart-exporter
+  template:
+    metadata:
+      labels:
+        app: smart-exporter
+    spec:
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      containers:
+      - name: smart-exporter
+        image: yuanying/node-exporter-smartmon:v0.17.0.1
+        resources:
+          requests:
+            memory: "32Mi"
+        securityContext:
+          privileged: true
+          # limits:
+          #   cpu: 100m
+          #   memory: "32Mi"
+        command:
+          - "/bin/sh"
+          - "-ec"
+          - |
+            echo '*/10 * * * * /smartmon.sh > /srv/txt_collector/smart.tmp && mv /srv/txt_collector/smart.tmp /srv/txt_collector/smart.prom' > /var/spool/cron/crontabs/root
+            crond -l 2 -f
+        volumeMounts:
+          - name: textfile-dir
+            mountPath: /srv/txt_collector
+      volumes:
+        - name: textfile-dir
+          hostPath:
+            path: /var/lib/node-exporter

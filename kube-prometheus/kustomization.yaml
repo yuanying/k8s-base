@@ -1,6 +1,8 @@
 resources:
 - base/
 - ingress.yaml
+- smart-mon-exporter.yaml
+- zfs-exporter.yaml
 
 configMapGenerator:
 - name: kp-config
@@ -18,3 +20,35 @@ vars:
     fieldpath: data.DOMAIN
 configurations:
 - varReference.yaml
+
+patchesJSON6902:
+- target:
+    group: apps
+    version: v1
+    kind: DaemonSet
+    name: node-exporter
+    namespace: monitoring
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/args/0
+      value: '--collector.textfile.directory=/srv/txt_collector'
+patchesStrategicMerge:
+- |-
+  apiVersion: apps/v1
+  kind: DaemonSet
+  metadata:
+    name: node-exporter
+    namespace: monitoring
+  spec:
+    template:
+      spec:
+        containers:
+        - name: node-exporter
+          volumeMounts:
+          - mountPath: /srv/txt_collector
+            name: textfile-dir
+            readOnly: false
+        volumes:
+        - name: textfile-dir
+          hostPath:
+            path: /var/lib/node-exporter

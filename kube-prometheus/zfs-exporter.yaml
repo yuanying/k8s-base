@@ -1,0 +1,61 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: zfs-exporter
+  namespace: monitoring
+  labels:
+    app: zfs-exporter
+spec:
+  selector:
+    matchLabels:
+      app: zfs-exporter
+  template:
+    metadata:
+      labels:
+        app: zfs-exporter
+    spec:
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        dedicated: nfs
+      tolerations:
+      - operator: Equal
+        effect: NoSchedule
+        key: dedicated
+        value: nfs
+      containers:
+      - name: zfs-exporter
+        image: derekgottlieb/zfs-exporter:1.0
+        resources:
+          requests:
+            memory: "32Mi"
+        ports:
+        - name: http
+          containerPort: 9254
+        securityContext:
+          privileged: true
+          # limits:
+          #   cpu: 100m
+          #   memory: "32Mi"
+      - name: curl
+        image: yuanying/alpine-curl:0.0.1
+        command:
+          - "/bin/sh"
+          - "-ec"
+          - |
+            echo '*/10 * * * * curl -s http://localhost:9254/metrics > /srv/txt_collector/zfs.tmp && mv /srv/txt_collector/zfs.tmp /srv/txt_collector/zfs.prom' > /var/spool/cron/crontabs/root
+            crond -l 2 -f
+        resources:
+          requests:
+            memory: "16Mi"
+          limits:
+            cpu: 100m
+            memory: "32Mi"
+        volumeMounts:
+          - name: textfile-dir
+            mountPath: /srv/txt_collector
+      volumes:
+        - name: textfile-dir
+          hostPath:
+            path: /var/lib/node-exporter
