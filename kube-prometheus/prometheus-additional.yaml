@@ -93,7 +93,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of airflow_temperature_cel_value
-          text: Abnormal state of airflow_temperature_cel_value
+          message: Abnormal state of airflow_temperature_cel_value
         expr: smartmon_airflow_temperature_cel_threshold - smartmon_airflow_temperature_cel_value
           > 0
         for: 5m
@@ -104,7 +104,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of command_timeout_value
-          text: Abnormal state of command_timeout_value
+          message: Abnormal state of command_timeout_value
         expr: smartmon_command_timeout_threshold - smartmon_command_timeout_value > 0
         for: 5m
         labels:
@@ -114,7 +114,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of current_pending_sector_value
-          text: Abnormal state of current_pending_sector_value
+          message: Abnormal state of current_pending_sector_value
         expr: smartmon_current_pending_sector_threshold - smartmon_current_pending_sector_value
           > 0
         for: 5m
@@ -125,7 +125,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of end_to_end_error_value
-          text: Abnormal state of end_to_end_error_value
+          message: Abnormal state of end_to_end_error_value
         expr: smartmon_end_to_end_error_threshold - smartmon_end_to_end_error_value >
           0
         for: 5m
@@ -136,7 +136,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of erase_fail_count_value
-          text: Abnormal state of erase_fail_count_value
+          message: Abnormal state of erase_fail_count_value
         expr: smartmon_erase_fail_count_threshold - smartmon_erase_fail_count_value >
           0
         for: 5m
@@ -147,7 +147,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of g_sense_error_rate_value
-          text: Abnormal state of g_sense_error_rate_value
+          message: Abnormal state of g_sense_error_rate_value
         expr: smartmon_g_sense_error_rate_threshold - smartmon_g_sense_error_rate_value
           > 0
         for: 5m
@@ -158,7 +158,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of hardware_ecc_recovered_value
-          text: Abnormal state of hardware_ecc_recovered_value
+          message: Abnormal state of hardware_ecc_recovered_value
         expr: smartmon_hardware_ecc_recovered_threshold - smartmon_hardware_ecc_recovered_value
           > 0
         for: 5m
@@ -169,7 +169,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of host_reads_mib_value
-          text: Abnormal state of host_reads_mib_value
+          message: Abnormal state of host_reads_mib_value
         expr: smartmon_host_reads_mib_threshold - smartmon_host_reads_mib_value > 0
         for: 5m
         labels:
@@ -179,7 +179,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of host_reads_32mib_value
-          text: Abnormal state of host_reads_32mib_value
+          message: Abnormal state of host_reads_32mib_value
         expr: smartmon_host_reads_32mib_threshold - smartmon_host_reads_32mib_value >
           0
         for: 5m
@@ -190,7 +190,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of host_writes_mib_value
-          text: Abnormal state of host_writes_mib_value
+          message: Abnormal state of host_writes_mib_value
         expr: smartmon_host_writes_mib_threshold - smartmon_host_writes_mib_value > 0
         for: 5m
         labels:
@@ -200,7 +200,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of host_writes_32mib_value
-          text: Abnormal state of host_writes_32mib_value
+          message: Abnormal state of host_writes_32mib_value
         expr: smartmon_host_writes_32mib_threshold - smartmon_host_writes_32mib_value
           > 0
         for: 5m
@@ -211,7 +211,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of load_cycle_count_value
-          text: Abnormal state of load_cycle_count_value
+          message: Abnormal state of load_cycle_count_value
         expr: smartmon_load_cycle_count_threshold - smartmon_load_cycle_count_value >
           0
         for: 5m
@@ -222,7 +222,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of media_wearout_indicator_value
-          text: Abnormal state of media_wearout_indicator_value
+          message: Abnormal state of media_wearout_indicator_value
         expr: smartmon_media_wearout_indicator_threshold - smartmon_media_wearout_indicator_value
           > 0
         for: 5m
@@ -233,7 +233,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of nand_writes_1gib_value
-          text: Abnormal state of nand_writes_1gib_value
+          message: Abnormal state of nand_writes_1gib_value
         expr: smartmon_nand_writes_1gib_threshold - smartmon_nand_writes_1gib_value >
           0
         for: 5m
@@ -244,7 +244,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of offline_uncorrectable_value
-          text: Abnormal state of offline_uncorrectable_value
+          message: Abnormal state of offline_uncorrectable_value
         expr: smartmon_offline_uncorrectable_threshold - smartmon_offline_uncorrectable_value
           > 0
         for: 5m
@@ -255,7 +255,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of power_cycle_count_value
-          text: Abnormal state of power_cycle_count_value
+          message: Abnormal state of power_cycle_count_value
         expr: smartmon_power_cycle_count_threshold - smartmon_power_cycle_count_value
           > 0
         for: 5m
@@ -266,7 +266,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of power_on_hours_value
-          text: Abnormal state of power_on_hours_value
+          message: Abnormal state of power_on_hours_value
         expr: smartmon_power_on_hours_threshold - smartmon_power_on_hours_value > 0
         for: 5m
         labels:
@@ -276,7 +276,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of program_fail_count_value
-          text: Abnormal state of program_fail_count_value
+          message: Abnormal state of program_fail_count_value
         expr: smartmon_program_fail_count_threshold - smartmon_program_fail_count_value
           > 0
         for: 5m
@@ -287,7 +287,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of raw_read_error_rate_value
-          text: Abnormal state of raw_read_error_rate_value
+          message: Abnormal state of raw_read_error_rate_value
         expr: smartmon_raw_read_error_rate_threshold - smartmon_raw_read_error_rate_value
           > 0
         for: 5m
@@ -298,7 +298,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of reallocated_sector_ct_value
-          text: Abnormal state of reallocated_sector_ct_value
+          message: Abnormal state of reallocated_sector_ct_value
         expr: smartmon_reallocated_sector_ct_threshold - smartmon_reallocated_sector_ct_value
           > 0
         for: 5m
@@ -309,7 +309,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of reported_uncorrect_value
-          text: Abnormal state of reported_uncorrect_value
+          message: Abnormal state of reported_uncorrect_value
         expr: smartmon_reported_uncorrect_threshold - smartmon_reported_uncorrect_value
           > 0
         for: 5m
@@ -320,7 +320,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of sata_downshift_count_value
-          text: Abnormal state of sata_downshift_count_value
+          message: Abnormal state of sata_downshift_count_value
         expr: smartmon_sata_downshift_count_threshold - smartmon_sata_downshift_count_value
           > 0
         for: 5m
@@ -331,7 +331,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of spin_retry_count_value
-          text: Abnormal state of spin_retry_count_value
+          message: Abnormal state of spin_retry_count_value
         expr: smartmon_spin_retry_count_threshold - smartmon_spin_retry_count_value >
           0
         for: 5m
@@ -342,7 +342,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of spin_up_time_value
-          text: Abnormal state of spin_up_time_value
+          message: Abnormal state of spin_up_time_value
         expr: smartmon_spin_up_time_threshold - smartmon_spin_up_time_value > 0
         for: 5m
         labels:
@@ -352,7 +352,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of start_stop_count_value
-          text: Abnormal state of start_stop_count_value
+          message: Abnormal state of start_stop_count_value
         expr: smartmon_start_stop_count_threshold - smartmon_start_stop_count_value >
           0
         for: 5m
@@ -363,7 +363,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of temperature_celsius_value
-          text: Abnormal state of temperature_celsius_value
+          message: Abnormal state of temperature_celsius_value
         expr: smartmon_temperature_celsius_threshold - smartmon_temperature_celsius_value
           > 0
         for: 5m
@@ -374,7 +374,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of total_lbas_read_value
-          text: Abnormal state of total_lbas_read_value
+          message: Abnormal state of total_lbas_read_value
         expr: smartmon_total_lbas_read_threshold - smartmon_total_lbas_read_value > 0
         for: 5m
         labels:
@@ -384,7 +384,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of total_lbas_written_value
-          text: Abnormal state of total_lbas_written_value
+          message: Abnormal state of total_lbas_written_value
         expr: smartmon_total_lbas_written_threshold - smartmon_total_lbas_written_value
           > 0
         for: 5m
@@ -395,7 +395,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of udma_crc_error_count_value
-          text: Abnormal state of udma_crc_error_count_value
+          message: Abnormal state of udma_crc_error_count_value
         expr: smartmon_udma_crc_error_count_threshold - smartmon_udma_crc_error_count_value
           > 0
         for: 5m
@@ -406,7 +406,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of unsafe_shutdown_count_value
-          text: Abnormal state of unsafe_shutdown_count_value
+          message: Abnormal state of unsafe_shutdown_count_value
         expr: smartmon_unsafe_shutdown_count_threshold - smartmon_unsafe_shutdown_count_value
           > 0
         for: 5m
@@ -417,7 +417,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of workld_host_reads_perc_value
-          text: Abnormal state of workld_host_reads_perc_value
+          message: Abnormal state of workld_host_reads_perc_value
         expr: smartmon_workld_host_reads_perc_threshold - smartmon_workld_host_reads_perc_value
           > 0
         for: 5m
@@ -428,7 +428,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of workld_media_wear_indic_value
-          text: Abnormal state of workld_media_wear_indic_value
+          message: Abnormal state of workld_media_wear_indic_value
         expr: smartmon_workld_media_wear_indic_threshold - smartmon_workld_media_wear_indic_value
           > 0
         for: 5m
@@ -439,7 +439,7 @@ spec:
           description: 'Abnormal state on {{$labels.instance}} for disk {{$labels.name}}
             (current value: {{$value}})'
           summary: Abnormal state of workload_minutes_value
-          text: Abnormal state of workload_minutes_value
+          message: Abnormal state of workload_minutes_value
         expr: smartmon_workload_minutes_threshold - smartmon_workload_minutes_value >
           0
         for: 5m
