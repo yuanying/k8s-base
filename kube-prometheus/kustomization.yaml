@@ -7,6 +7,11 @@ resources:
 - smart-mon-exporter.yaml
 - zfs-exporter.yaml
 
+images:
+- name: quay.io/coreos/kube-rbac-proxy
+  newName: quay.io/brancz/kube-rbac-proxy
+  newTag: HEAD-2020-05-07-2fd48d73
+
 configMapGenerator:
 - name: kp-config
   namespace: monitoring
