@@ -1,6 +1,7 @@
 resources:
 - base/
 - grafana-base/
+- k8s.yaml
 - ingress.yaml
 - prometheus-additional.yaml
 - smart-mon-exporter.yaml
@@ -38,6 +39,7 @@ patchesStrategicMerge:
 - prometheus.yaml
 - alertmanager.yaml
 - grafana.yaml
+- service-monitor.yaml
 - |-
   apiVersion: apps/v1
   kind: DaemonSet

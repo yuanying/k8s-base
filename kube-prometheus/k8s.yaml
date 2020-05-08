@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: kube-system
+  name: kube-scheduler-prometheus-discovery
+  labels:
+    k8s-app: kube-scheduler
+spec:
+  selector:
+    k8s-app: kube-scheduler
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: https-metrics
+    port: 10259
+    targetPort: 10259
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: kube-system
+  name: kube-controller-manager-prometheus-discovery
+  labels:
+    k8s-app: kube-controller-manager
+spec:
+  selector:
+    k8s-app: kube-controller-manager
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: https-metrics
+    port: 10257
+    targetPort: 10257
+    protocol: TCP
