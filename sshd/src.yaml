@@ -1,0 +1,61 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: sshd
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: dev-sshd
+  name: dev-sshd
+  namespace: sshd
+spec:
+  ports:
+  - port: 22
+    protocol: TCP
+    targetPort: 22
+  selector:
+    app: dev-sshd
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dev-sshd
+  name: dev-sshd
+  namespace: sshd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dev-sshd
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: dev-sshd
+    spec:
+      containers:
+      - image: yuanying/docker-sshd:0.1.1
+        imagePullPolicy: Always
+        name: sshd
+        ports:
+        - name: ssh
+          containerPort: 22
+        # volumeMounts:
+        # - name: data
+        #   mountPath: /var/data
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      # volumes:
+      # - name: data
+      #   persistentVolumeClaim:
+      #     claimName: nfsd-ceph-root
