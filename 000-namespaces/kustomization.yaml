@@ -1,7 +1,8 @@
 resources:
-- metallb.yaml
-- nfsd.yaml
-- ingress.yaml
 - cert-manager.yaml
+- ingress.yaml
 - istio.yaml
+- metallb.yaml
 - monitoring.yaml
+- nfsd.yaml
+- targetd.yaml

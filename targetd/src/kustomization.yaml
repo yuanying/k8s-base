@@ -1,0 +1,4 @@
+namespace: targetd
+resources:
+- iscsi-provisioner-class.yaml
+- iscsi-provisioner-d.yaml

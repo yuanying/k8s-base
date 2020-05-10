@@ -1,0 +1,108 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: targetd
+  labels:
+    app: targetd
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: targetd
+spec:
+  ports:
+    - name: targetd
+      port: 18700
+    - name: iscsi-target
+      port: 3260
+  selector:
+    app: targetd
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: targetd
+  labels:
+    app: targetd
+spec:
+  selector:
+    matchLabels:
+      app: targetd
+  template:
+    metadata:
+      labels:
+        app: targetd
+    spec:
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        dedicated: nfs
+      tolerations:
+      - operator: Equal
+        effect: NoSchedule
+        key: dedicated
+        value: nfs
+      serviceAccountName: targetd
+      initContainers:
+      - name: copy-config
+        image: busybox:1.31
+        command:
+        - cp
+        - -f
+        - /tmp/target/targetd.yaml
+        - /etc/target/targetd.yaml
+        volumeMounts:
+        - name: config
+          mountPath: /tmp/target
+        - name: etc-target
+          mountPath: /etc/target
+      containers:
+      - name: targetd
+        image: yuanying/targetd:0.8.11
+        ports:
+        - name: targetd
+          containerPort: 18700
+        - name: iscsi-target
+          containerPort: 3260
+        resources:
+          requests:
+            cpu: 500m
+            memory: "1024Mi"
+          limits:
+            cpu: 1000m
+            memory: "4096Mi"
+        securityContext:
+          privileged: true
+          # capabilities:
+          #   add: ["SYS_ADMIN", "SETPCAP"]
+        volumeMounts:
+        - name: kernel-config
+          mountPath: /sys/kernel/config
+        - name: run-lvm
+          mountPath: /run/lvm
+        - name: lib-modules
+          mountPath: /lib/modules
+        - name: dev
+          mountPath: /dev
+        - name: etc-target
+          mountPath: /etc/target
+      volumes:
+      - name: kernel-config
+        hostPath:
+          path: /sys/kernel/config
+      - name: run-lvm
+        hostPath:
+          path: /run/lvm
+      - name: lib-modules
+        hostPath:
+          path: /lib/modules
+      - name: dev
+        hostPath:
+          path: /dev
+      - name: etc-target
+        hostPath:
+          path: /etc/target
+      - name: config
+        secret:
+          secretName: targetd

@@ -50,12 +50,12 @@ spec:
         ports:
         - name: ssh
           containerPort: 22
-        # volumeMounts:
-        # - name: data
-        #   mountPath: /var/data
+        volumeMounts:
+        - name: tmp-data
+          mountPath: /home/dev/tmp
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
-      # volumes:
-      # - name: data
-      #   persistentVolumeClaim:
-      #     claimName: nfsd-ceph-root
+      volumes:
+      - name: tmp-data
+        persistentVolumeClaim:
+          claimName: tmp-data
