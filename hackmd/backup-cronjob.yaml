@@ -16,7 +16,7 @@ data:
     PREFIX='postgres-'
     EXT='.sql'
 
-    pg_dump $POSTGRES_DB > $SAVEPATH$PREFIX$DATE$EXT
+    pg_dump $PGDATABASE > $SAVEPATH$PREFIX$DATE$EXT
 
     find $SAVEPATH -type f -daystart -mtime $PERIOD -exec rm {} \;
 ---
@@ -35,7 +35,7 @@ spec:
         spec:
           containers:
           - name: backup
-            image: postgres:9.6.2
+            image: docker.io/bitnami/postgresql:11.7.0-debian-10-r99
             args:
             - /bin/bash
             - /var/bin/backup.sh
@@ -46,20 +46,17 @@ spec:
               mountPath: /var/backup
             env:
             - name: PGHOST
-              value: "hmd0-postgresql.hackmd.svc.cluster.local"
-            - name: POSTGRES_USER
-              value: "hackmd"
-              # Required for pg_isready in the health probes.
+              value: "postgresql"
             - name: PGUSER
               value: "hackmd"
             - name: PGPORT
               value: "5432"
-            - name: POSTGRES_DB
+            - name: PGDATABASE
               value: "hackmd"
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: hmd0-postgresql
+                  name: postgresql
                   key: postgres-password
           restartPolicy: Never
           volumes:
