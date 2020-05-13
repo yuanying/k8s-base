@@ -1,0 +1,63 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: chrome
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: chrome
+  name: chrome
+  namespace: chrome
+spec:
+  ports:
+  - port: 9222
+    protocol: TCP
+    targetPort: 9222
+  selector:
+    app: chrome
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: chrome
+  name: chrome
+  namespace: chrome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chrome
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: chrome
+    spec:
+      securityContext:
+        fsGroup: 50
+      containers:
+      - image: yukinying/chrome-headless-browser-xl:84.0.4136.5
+        imagePullPolicy: Always
+        name: chrome
+        ports:
+        - name: chrome
+          containerPort: 9222
+        # volumeMounts:
+        # - name: tmp-data
+        #   mountPath: /home/dev/tmp
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      # volumes:
+      # - name: tmp-data
+      #   persistentVolumeClaim:
+      #     claimName: tmp-data
