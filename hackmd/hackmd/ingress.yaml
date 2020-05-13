@@ -1,0 +1,28 @@
+##---
+# Source: hackmd/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: hackmd
+  labels:
+    app: hackmd
+    chart: hackmd-0.1.1
+    release: hmd0
+    heritage: Tiller
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+
+spec:
+  tls:
+    - hosts:
+        - $(HACKMD_URL)
+      secretName: hackmd-tls
+  rules:
+    - host: $(HACKMD_URL)
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: hackmd
+              servicePort: http

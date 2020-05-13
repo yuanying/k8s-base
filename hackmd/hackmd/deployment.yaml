@@ -1,0 +1,86 @@
+##---
+# Source: hackmd/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hackmd
+  labels:
+    app: hackmd
+    chart: hackmd-0.1.1
+    release: hmd0
+    heritage: Tiller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hackmd
+      release: hmd0
+  template:
+    metadata:
+      labels:
+        app: hackmd
+        release: hmd0
+    spec:
+      containers:
+        - name: hackmd
+          image: nabo.codimd.dev/hackmdio/hackmd:2.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 3000
+            initialDelaySeconds: 120
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 3000
+            initialDelaySeconds: 30
+          env:
+            - name: CMD_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: postgresql-password
+            - name: CMD_DB_URL
+              value: postgres://hackmd:$(CMD_DB_PASSWORD)@postgresql:5432/hackmd
+            - name: CMD_DOMAIN
+              value: $(HACKMD_URL)
+            - name: CMD_PROTOCOL_USESSL
+              value: "true"
+            - name: CMD_URL_ADDPORT
+              value: "false"
+            - name: CMD_ALLOW_FREEURL
+              value: "true"
+            - name: CMD_ALLOW_ANONYMOUS
+              value: "true"
+            - name: CMD_GITHUB_CLIENTID
+              valueFrom:
+                secretKeyRef:
+                  name: github
+                  key: github-clientid
+            - name: CMD_GITHUB_CLIENTSECRET
+              valueFrom:
+                secretKeyRef:
+                  name: github
+                  key: github-clientsecret
+            - name: CMD_EMAIL
+              value: "false"
+            - name: CMD_ALLOW_EMAIL_REGISTER
+              value: "false"
+            - name: CMD_IMAGE_UPLOAD_TYPE
+              value: filesystem
+
+          volumeMounts:
+            - name: data
+              mountPath: "/hackmd/public/uploads"
+          resources:
+            {}
+
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: codimd

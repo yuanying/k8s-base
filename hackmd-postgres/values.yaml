@@ -1,5 +1,0 @@
-postgresPassword: "password-changeme"
-persistence:
-  existingClaim: "codimd-postgres"
-
-

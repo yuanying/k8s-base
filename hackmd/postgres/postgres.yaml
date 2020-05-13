@@ -3,33 +3,34 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: hmd0-postgresql
+  name: postgresql
   labels:
     app: postgresql
-    chart: postgresql-7.7.2
+    chart: postgresql-8.9.6
     release: "hmd0"
     heritage: "Helm"
 type: Opaque
 data:
-  postgresql-password: "bVAyVFV1UG90Ng=="
+  postgresql-postgres-password: "UkVQTEFDRV9NRQ=="
+  postgresql-password: "UkVQTEFDRV9NRQ=="
 ---
 # Source: postgresql/templates/svc-headless.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: hmd0-postgresql-headless
+  name: postgresql-headless
   labels:
     app: postgresql
-    chart: postgresql-7.7.2
+    chart: postgresql-8.9.6
     release: "hmd0"
     heritage: "Helm"
 spec:
   type: ClusterIP
   clusterIP: None
   ports:
-    - name: postgresql
+    - name: tcp-postgresql
       port: 5432
-      targetPort: postgresql
+      targetPort: tcp-postgresql
   selector:
     app: postgresql
     release: "hmd0"
@@ -38,18 +39,19 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hmd0-postgresql
+  name: postgresql
   labels:
     app: postgresql
-    chart: postgresql-7.7.2
+    chart: postgresql-8.9.6
     release: "hmd0"
     heritage: "Helm"
+  annotations:
 spec:
   type: ClusterIP
   ports:
-    - name: postgresql
+    - name: tcp-postgresql
       port: 5432
-      targetPort: postgresql
+      targetPort: tcp-postgresql
   selector:
     app: postgresql
     release: "hmd0"
@@ -59,14 +61,15 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: hmd0-postgresql
+  name: postgresql
   labels:
     app: postgresql
-    chart: postgresql-7.7.2
+    chart: postgresql-8.9.6
     release: "hmd0"
     heritage: "Helm"
+  annotations:
 spec:
-  serviceName: hmd0-postgresql-headless
+  serviceName: postgresql-headless
   replicas: 1
   updateStrategy:
     type: RollingUpdate
@@ -77,44 +80,19 @@ spec:
       role: master
   template:
     metadata:
-      name: hmd0-postgresql
+      name: postgresql
       labels:
         app: postgresql
-        chart: postgresql-7.7.2
+        chart: postgresql-8.9.6
         release: "hmd0"
         heritage: "Helm"
         role: master
     spec:      
       securityContext:
         fsGroup: 1001
-      initContainers:
-        - name: init-chmod-data
-          image: docker.io/bitnami/minideb:stretch
-          imagePullPolicy: "Always"
-          resources:
-            requests:
-              cpu: 250m
-              memory: 256Mi
-          command:
-            - /bin/sh
-            - -c
-            - |
-              mkdir -p /bitnami/postgresql/data
-              chmod 700 /bitnami/postgresql/data
-              find /bitnami/postgresql -mindepth 0 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | \
-                xargs chown -R 1001:1001
-              chmod -R 777 /dev/shm
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-            - name: data
-              mountPath: /bitnami/postgresql
-              subPath: 
-            - name: dshm
-              mountPath: /dev/shm
       containers:
-        - name: hmd0-postgresql
-          image: docker.io/bitnami/postgresql:11.6.0-debian-9-r0
+        - name: postgresql
+          image: docker.io/bitnami/postgresql:11.7.0-debian-10-r99
           imagePullPolicy: "IfNotPresent"
           resources:
             requests:
@@ -131,24 +109,31 @@ spec:
               value: "/bitnami/postgresql"
             - name: PGDATA
               value: "/bitnami/postgresql/data"
+            - name: POSTGRES_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: postgresql-postgres-password
             - name: POSTGRES_USER
-              value: "postgres"
+              value: "hackmd"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: hmd0-postgresql
+                  name: postgresql
                   key: postgresql-password
+            - name: POSTGRES_DB
+              value: "hackmd"
             - name: POSTGRESQL_ENABLE_LDAP
               value: "no"
           ports:
-            - name: postgresql
+            - name: tcp-postgresql
               containerPort: 5432
           livenessProbe:
             exec:
               command:
                 - /bin/sh
                 - -c
-                - exec pg_isready -U "postgres" -h 127.0.0.1 -p 5432
+                - exec pg_isready -U "hackmd" -d "hackmd" -h 127.0.0.1 -p 5432
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -161,8 +146,8 @@ spec:
                 - -c
                 - -e
                 - |
-                  pg_isready -U "postgres" -h 127.0.0.1 -p 5432
-                  [ -f /opt/bitnami/postgresql/tmp/.initialized ]
+                  exec pg_isready -U "hackmd" -d "hackmd" -h 127.0.0.1 -p 5432
+                  [ -f /opt/bitnami/postgresql/tmp/.initialized ] || [ -f /bitnami/postgresql/.initialized ]
             initialDelaySeconds: 5
             periodSeconds: 10
             timeoutSeconds: 5
@@ -179,6 +164,13 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
-        - name: data
-          persistentVolumeClaim:
-            claimName: codimd-postgres
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "8Gi"
+        storageClassName: iscsi-targetd-vg-targetd

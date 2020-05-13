@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: codimd-restore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: codimd-restore
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: codimd-restore
+    spec:
+      containers:
+      - image: docker.io/bitnami/postgresql:11.7.0-debian-10-r99
+        imagePullPolicy: Always
+        name: restore
+        volumeMounts:
+        - name: data
+          mountPath: /var/backup
+        command:
+        - sleep
+        - "7200"
+        env:
+        - name: PGHOST
+          value: "postgresql"
+        - name: PGUSER
+          value: "hackmd"
+        - name: PGPORT
+          value: "5432"
+        - name: PGDATABASE
+          value: "hackmd"
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgresql
+              key: postgresql-password
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: codimd-backup

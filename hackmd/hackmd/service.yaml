@@ -1,0 +1,21 @@
+##---
+# Source: hackmd/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: hackmd
+  labels:
+    app: hackmd
+    chart: hackmd-0.1.1
+    release: hmd0
+    heritage: Tiller
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: hackmd
+    release: hmd0

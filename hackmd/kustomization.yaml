@@ -1,0 +1,34 @@
+namespace: hackmd
+
+configurations:
+- varReference.yaml
+
+resources:
+- hackmd/
+- postgres/
+- pvc.yaml
+- restore-deployment.yaml
+
+configMapGenerator:
+- name: cmd-config
+  namespace: hackmd
+  literals:
+  - NFS_SERVER=127.0.0.1
+  - HACKMD_URL=text.examle.com
+vars:
+- name: NFS_SERVER
+  objref:
+    kind: ConfigMap
+    name: cmd-config
+    namespace: hackmd
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.NFS_SERVER
+- name: HACKMD_URL
+  objref:
+    kind: ConfigMap
+    name: cmd-config
+    namespace: hackmd
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.HACKMD_URL

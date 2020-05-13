@@ -1,0 +1,71 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    name: hackmd
+  name: hackmd-backup
+  namespace: hackmd
+data:
+  backup.sh: |
+    #!/bin/bash
+
+    PERIOD='+10'
+    DATE=`date '+%Y%m%d-%H%M%S'`
+    SAVEPATH='/var/backup/'
+    PREFIX='postgres-'
+    EXT='.sql'
+
+    pg_dump $POSTGRES_DB > $SAVEPATH$PREFIX$DATE$EXT
+
+    find $SAVEPATH -type f -daystart -mtime $PERIOD -exec rm {} \;
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    name: hackmd
+  name: hackmd-backup
+  namespace: hackmd
+spec:
+  schedule: "1 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backup
+            image: postgres:9.6.2
+            args:
+            - /bin/bash
+            - /var/bin/backup.sh
+            volumeMounts:
+            - name: script
+              mountPath: /var/bin
+            - name: data
+              mountPath: /var/backup
+            env:
+            - name: PGHOST
+              value: "hmd0-postgresql.hackmd.svc.cluster.local"
+            - name: POSTGRES_USER
+              value: "hackmd"
+              # Required for pg_isready in the health probes.
+            - name: PGUSER
+              value: "hackmd"
+            - name: PGPORT
+              value: "5432"
+            - name: POSTGRES_DB
+              value: "hackmd"
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hmd0-postgresql
+                  key: postgres-password
+          restartPolicy: Never
+          volumes:
+          - name: script
+            configMap:
+              name: hackmd-backup
+          - name: data
+            persistentVolumeClaim:
+              claimName: codimd-backup
