@@ -57,7 +57,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: postgresql
-                  key: postgres-password
+                  key: postgresql-password
           restartPolicy: Never
           volumes:
           - name: script
