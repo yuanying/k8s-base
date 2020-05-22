@@ -1,11 +1,12 @@
 resources:
 - base/
 - grafana-base/
-- k8s.yaml
-- ingress.yaml
-- prometheus-additional.yaml
-- smart-mon-exporter.yaml
-- zfs-exporter.yaml
+- resources/k8s.yaml
+- resources/ingress.yaml
+- resources/pvc.yaml
+- resources/prometheus-additional.yaml
+- resources/smart-mon-exporter.yaml
+- resources/zfs-exporter.yaml
 
 images:
 - name: quay.io/coreos/kube-rbac-proxy
@@ -17,6 +18,7 @@ configMapGenerator:
   namespace: monitoring
   literals:
   - DOMAIN=example.com
+
 vars:
 - name: DOMAIN
   objref:
@@ -36,31 +38,11 @@ patchesJSON6902:
     kind: DaemonSet
     name: node-exporter
     namespace: monitoring
-  patch: |-
-    - op: add
-      path: /spec/template/spec/containers/0/args/0
-      value: '--collector.textfile.directory=/srv/txt_collector'
+  path: patches/node-exporter.json.yaml
+
 patchesStrategicMerge:
-- prometheus.yaml
-- alertmanager.yaml
-- grafana.yaml
-- service-monitor.yaml
-- |-
-  apiVersion: apps/v1
-  kind: DaemonSet
-  metadata:
-    name: node-exporter
-    namespace: monitoring
-  spec:
-    template:
-      spec:
-        containers:
-        - name: node-exporter
-          volumeMounts:
-          - mountPath: /srv/txt_collector
-            name: textfile-dir
-            readOnly: false
-        volumes:
-        - name: textfile-dir
-          hostPath:
-            path: /var/lib/node-exporter
+- patches/prometheus.yaml
+- patches/alertmanager.yaml
+- patches/grafana.yaml
+- patches/service-monitor.yaml
+- patches/node-exporter.yaml

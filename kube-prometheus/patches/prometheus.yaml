@@ -8,3 +8,11 @@ spec:
   additionalScrapeConfigs:
     name: additional-scrape-configs
     key: prometheus-additional.yaml
+  storage:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: "iscsi-targetd-vg-targetd"
+        resources:
+          requests:
+            storage: 10Gi
+
