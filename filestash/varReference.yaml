@@ -1,0 +1,8 @@
+varReference:
+- path: spec/nfs/server
+  kind: PersistentVolume
+- path: spec/rules/host
+  kind: Ingress
+- path: spec/tls/hosts
+  kind: Ingress
+

@@ -1,0 +1,39 @@
+namespace: filestash
+
+configurations:
+- varReference.yaml
+
+resources:
+- deploy.yaml
+- ingress.yaml
+- ns.yaml
+- pvc.yaml
+- svc.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+- name: fs-config
+  namespace: filestash
+  literals:
+  - NFS_SERVER=127.0.0.1
+  - FILESTASH_URL=text.examle.com
+vars:
+- name: NFS_SERVER
+  objref:
+    kind: ConfigMap
+    name: fs-config
+    namespace: filestash
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.NFS_SERVER
+- name: FILESTASH_URL
+  objref:
+    kind: ConfigMap
+    name: fs-config
+    namespace: filestash
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.FILESTASH_URL
+

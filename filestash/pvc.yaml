@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    use: "filestash"
+  name: filestash
+spec:
+  capacity:
+    storage: "10Gi"
+  accessModes:
+  - ReadWriteMany
+  nfs:
+    path: /filestash/config
+    server: $(NFS_SERVER)
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    use: "filestash"
+  name: filestash
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: "10Gi"
+  selector:
+    matchLabels:
+      use: "filestash"
