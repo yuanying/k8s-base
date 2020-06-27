@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bds
+spec:
+  template:
+    spec:
+      tolerations:
+      - operator: Exists
+        effect: NoSchedule
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      storageClassName: manual
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+      selector:
+        matchLabels:
+          use: "minecraft"
