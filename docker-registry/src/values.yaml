@@ -1,0 +1,4 @@
+persistence:
+  enabled: true
+  existingClaim: docker-registry
+
