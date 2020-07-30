@@ -37,7 +37,7 @@ spec:
       hostNetwork: true
       nodeSelector:
         kubernetes.io/arch: amd64
-        tgtd.unstable.cloud/storage: ""
+        dedicated: nfs
       tolerations:
       - operator: Equal
         effect: NoSchedule
