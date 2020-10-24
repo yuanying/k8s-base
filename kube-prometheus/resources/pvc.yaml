@@ -5,7 +5,7 @@ metadata:
   name: grafana-storage
   namespace: monitoring
 spec:
-  storageClassName: "iscsi-targetd-vg-targetd"
+  storageClassName: "zfslocal"
   accessModes:
     - ReadWriteOnce
   resources:

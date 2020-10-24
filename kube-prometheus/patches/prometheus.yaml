@@ -11,7 +11,7 @@ spec:
   storage:
     volumeClaimTemplate:
       spec:
-        storageClassName: "iscsi-targetd-vg-targetd"
+        storageClassName: "zfslocal"
         resources:
           requests:
             storage: 10Gi
