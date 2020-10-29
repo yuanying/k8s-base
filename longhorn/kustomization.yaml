@@ -1,0 +1,5 @@
+resources:
+- longhorn.yaml
+# - pvc.yaml
+# patchesStrategicMerge:
+# - patches/volumes.yaml
