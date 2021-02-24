@@ -320,7 +320,7 @@ persistence:
   subPath: ""
 
   # storageClass: "-"
-  storageClass: "iscsi-targetd-vg-targetd"
+  storageClass: "rook-ceph-block"
   accessModes:
     - ReadWriteOnce
   size: 8Gi
