@@ -1,3 +1,7 @@
-namespace: rook-ceph
+# namespace: rook-ceph
+# resources:
+# - toolbox.yaml
 resources:
-- toolbox.yaml
+- operator.yaml
+- cluster-on-pvc.yaml
+- sc.yaml

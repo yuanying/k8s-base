@@ -1,5 +1,16 @@
-https://github.com/rook/rook/blob/master/Documentation/toolbox.md
+## Prepare
 
 ```
-kubectl -n rook-ceph exec -it $(kubectl -n rook-ceph get pod -l "app=rook-ceph-tools" -o jsonpath='{.items[0].metadata.name}') bash
+curl -O https://raw.githubusercontent.com/rook/rook/release-1.4/cluster/examples/kubernetes/ceph/common.yaml
+curl -O https://raw.githubusercontent.com/rook/rook/release-1.4/cluster/examples/kubernetes/ceph/operator.yaml
+curl -O https://raw.githubusercontent.com/rook/rook/release-1.4/cluster/examples/kubernetes/ceph/cluster-on-pvc.yaml
+```
+
+Modify storageClassName to zfslocal
+
+## Install
+
+```
+k apply -f base/rook-ceph/common.yaml
+kustomize build rook-ceph | k apply -f -
 ```
