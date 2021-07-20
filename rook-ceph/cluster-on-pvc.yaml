@@ -32,7 +32,7 @@ spec:
           requests:
             storage: 10Gi
   cephVersion:
-    image: ceph/ceph:v15.2.4
+    image: ceph/ceph:v15.2.11
     allowUnsupported: false
   skipUpgradeChecks: false
   continueUpgradeAfterChecksEvenIfNotHealthy: false
@@ -167,5 +167,6 @@ spec:
   disruptionManagement:
     managePodBudgets: false
     osdMaintenanceTimeout: 30
+    pgHealthCheckTimeout: 0
     manageMachineDisruptionBudgets: false
     machineDisruptionBudgetNamespace: openshift-machine-api
