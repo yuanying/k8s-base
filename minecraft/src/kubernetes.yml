@@ -25,7 +25,7 @@ data:
   #
   ## Changing these will have a security impact
   #ONLINE_MODE: "true" # Options: true, false (removes Xbox Live account requirements)
-  #WHITE_LIST: "false" # If enabled, need to provide a whitelist.json by your own means. 
+  #WHITE_LIST: "false" # If enabled, need to provide a whitelist.json by your own means.
   #
   ## Changing these will have a performance impact
   #VIEW_DISTANCE: "10"
