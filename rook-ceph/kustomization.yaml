@@ -2,7 +2,6 @@
 # resources:
 # - toolbox.yaml
 resources:
-- crds.yaml
 - operator.yaml
 - cluster-on-pvc.yaml
 - sc.yaml
