@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: hackmd
-          image: nabo.codimd.dev/hackmdio/hackmd:2.0.0
+          image: hackmdio/hackmd:2.4.1
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

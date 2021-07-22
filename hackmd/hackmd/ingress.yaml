@@ -1,6 +1,6 @@
 ##---
 # Source: hackmd/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: hackmd
@@ -16,14 +16,17 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
 spec:
   tls:
-    - hosts:
-        - $(HACKMD_URL)
-      secretName: hackmd-tls
+  - hosts:
+    - $(HACKMD_URL)
+    secretName: hackmd-tls
   rules:
-    - host: $(HACKMD_URL)
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: hackmd
-              servicePort: http
+  - host: $(HACKMD_URL)
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hackmd
+            port:
+              name: http
