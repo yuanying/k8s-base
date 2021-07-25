@@ -32,7 +32,7 @@ spec:
   selector:
     app: kuard
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kuard
@@ -49,6 +49,9 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: kuard
-          servicePort: 80
+          service:
+            name: kuard
+            port:
+              number: 80
