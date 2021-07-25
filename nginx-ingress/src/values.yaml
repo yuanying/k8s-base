@@ -17,7 +17,7 @@ controller:
     repository: "asia.gcr.io/k8s-artifacts-prod/ingress-nginx/controller"
 
   extraArgs:
-    enable-ssl-passthrough:
+    enable-ssl-passthrough: true
 
   resources:
    limits:
