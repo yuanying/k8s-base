@@ -44,5 +44,4 @@ patchesStrategicMerge:
 - patches/prometheus.yaml
 - patches/alertmanager.yaml
 - patches/grafana.yaml
-- patches/service-monitor.yaml
 - patches/node-exporter.yaml
