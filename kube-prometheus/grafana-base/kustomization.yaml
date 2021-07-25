@@ -1,3 +1,4 @@
+namespace: monitoring
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:

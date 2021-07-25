@@ -1,5 +1,5 @@
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: grafana
@@ -18,14 +18,18 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: grafana
-          servicePort: 3000
+          service:
+            name: grafana
+            port:
+              number: 3000
+        path: /
+        pathType: Prefix
   tls:
     - hosts:
       - grafana.$(DOMAIN)
       secretName: grafana-tls
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: prometheus
@@ -44,14 +48,18 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: prometheus-k8s
-          servicePort: 9090
+          service:
+            name: prometheus-k8s
+            port:
+              number: 9090
+        path: /
+        pathType: Prefix
   tls:
     - hosts:
       - prometheus.$(DOMAIN)
       secretName: prometheus-tls
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: alertmanager
@@ -70,8 +78,12 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: alertmanager-main
-          servicePort: 9093
+          service:
+            name: alertmanager-main
+            port:
+              number: 9093
+        path: /
+        pathType: Prefix
   tls:
     - hosts:
       - alertmanager.$(DOMAIN)
