@@ -46,7 +46,7 @@ spec:
       securityContext:
         fsGroup: 50
       containers:
-      - image: yuanying/docker-sshd:0.1.1
+      - image: ghcr.io/yuanying/docker-sshd:0.2.2
         imagePullPolicy: Always
         name: sshd
         ports:
