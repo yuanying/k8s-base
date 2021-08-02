@@ -20,7 +20,7 @@ spec:
         operator: Exists
       containers:
       - name: smart-exporter
-        image: yuanying/node-exporter-smartmon:0.18.0
+        image: ghcr.io/yuanying/node-exporter-smartmon:0.19.0
         resources:
           requests:
             memory: "32Mi"
