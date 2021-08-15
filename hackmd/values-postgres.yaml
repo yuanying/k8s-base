@@ -320,7 +320,7 @@ persistence:
   subPath: ""
 
   # storageClass: "-"
-  storageClass: "rook-ceph-block"
+  storageClass: "longhorn"
   accessModes:
     - ReadWriteOnce
   size: 8Gi
