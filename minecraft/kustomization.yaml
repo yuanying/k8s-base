@@ -1,7 +1,6 @@
 namespace: minecraft
 resources:
 - src/
-- resources/namespace.yaml
 
 patchesStrategicMerge:
 - patches/bds.yaml
