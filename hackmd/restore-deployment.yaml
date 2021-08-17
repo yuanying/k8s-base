@@ -25,6 +25,8 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /var/backup
+        - name: script
+          mountPath: /var/bin
         command:
         - sleep
         - "7200"
@@ -48,3 +50,6 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: codimd-backup
+      - name: script
+        configMap:
+          name: hackmd-backup
