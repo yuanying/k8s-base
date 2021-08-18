@@ -5,7 +5,7 @@ metadata:
   name: grafana-storage
   namespace: monitoring
 spec:
-  storageClassName: "zfslocal"
+  storageClassName: "longhorn"
   accessModes:
     - ReadWriteOnce
   resources:
