@@ -1,0 +1,4 @@
+namespace: fs
+resources:
+- src.yaml
+- h.yaml

@@ -1,0 +1,5 @@
+namespace: fs
+
+resources:
+- namespace.yaml
+- pvc.yaml
