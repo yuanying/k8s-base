@@ -1,0 +1,72 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: sites
+  labels:
+    app: nfs
+    component: sites
+spec:
+  ipFamilyPolicy: PreferDualStack
+  ipFamilies:
+  - IPv4
+  - IPv6
+  ports:
+    - name: nfs
+      port: 2049
+    - name: mountd
+      port: 20048
+    - name: rpcbind
+      port: 111
+  selector:
+    app: nfs
+    component: sites
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sites
+  labels:
+    app: nfs
+    component: sites
+spec:
+  selector:
+    matchLabels:
+      app: nfs
+      component: sites
+  template:
+    metadata:
+      labels:
+        app: nfs
+        component: sites
+    spec:
+      serviceAccountName: shared
+      containers:
+      - name: nfs
+        image: gcr.io/google_containers/volume-nfs:0.8
+        args:
+        - "/sites"
+        ports:
+        - name: nfs
+          containerPort: 2049
+        - name: mountd
+          containerPort: 20048
+        - name: rpcbind
+          containerPort: 111
+        resources:
+          requests:
+            memory: "256Mi"
+          limits:
+            cpu: 500m
+            memory: "1024Mi"
+        securityContext:
+          privileged: true
+          # capabilities:
+          #   add: ["SYS_ADMIN", "SETPCAP"]
+        volumeMounts:
+        - name: sites
+          mountPath: /sites
+      volumes:
+      - name: sites
+        persistentVolumeClaim:
+          claimName: sites

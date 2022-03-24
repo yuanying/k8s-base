@@ -3,3 +3,5 @@ resources:
 - src.yaml
 - h.yaml
 - h-backup.yaml
+- sites.yaml
+- sites-backup.yaml
