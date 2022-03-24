@@ -1,0 +1,36 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: h-backup
+spec:
+  schedule: "44 5 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backup
+            image: ghcr.io/yuanying/docker-sshd:0.2.2
+            imagePullPolicy: IfNotPresent
+            command:
+            - sudo
+            - rsync
+            - -avz
+            - /original/
+            - /backup/
+            volumeMounts:
+            - name: original
+              mountPath: /original
+            - name: backup
+              mountPath: /backup
+          restartPolicy: OnFailure
+          volumes:
+          - name: original
+            nfs:
+              path: /h
+              server: h.fs.svc.cluster.local
+          - name: backup
+            nfs:
+              path: /h
+              server: 192.168.1.121
