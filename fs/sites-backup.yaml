@@ -17,6 +17,7 @@ spec:
             - sudo
             - rsync
             - -avz
+            - --delete
             - /original/
             - /backup/
             volumeMounts:
