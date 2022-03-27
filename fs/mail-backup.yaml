@@ -1,0 +1,46 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mail-backup
+spec:
+  schedule: "33 8 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backup
+            image: ghcr.io/yuanying/docker-sshd:0.2.2
+            imagePullPolicy: IfNotPresent
+            command:
+            - sudo
+            - rsync
+            - -avz
+            - --delete
+            - /original/
+            - /backup/
+            volumeMounts:
+            - name: original
+              mountPath: /original
+            - name: backup
+              mountPath: /backup
+          restartPolicy: OnFailure
+          volumes:
+          - name: original
+            nfs:
+              path: /mail
+              server: mail.fs.svc.cluster.local
+          - name: backup
+            nfs:
+              path: /mail
+              server: 192.168.1.121
+# ---
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: mail-backup
+#   labels:
+#     type: oneshot
+# spec:
+

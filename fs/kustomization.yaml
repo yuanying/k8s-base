@@ -5,3 +5,17 @@ resources:
 - h-backup.yaml
 - sites.yaml
 - sites-backup.yaml
+- mail.yaml
+- mail-backup.yaml
+
+# replacements:
+# - source:
+#     kind: CronJob
+#     name: mail-backup
+#     fieldPath: spec.jobTemplate.spec
+#   targets:
+#   - select:
+#       kind: Job
+#       name: mail-backup
+#     fieldPaths:
+#     - spec

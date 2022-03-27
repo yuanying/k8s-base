@@ -2,6 +2,19 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: mail
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: "20Gi"
+  storageClassName: gold
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
   name: sites
 spec:
   accessModes:
