@@ -37,3 +37,16 @@ spec:
       storage: "200Gi"
   storageClassName: silver
   volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: "200Gi"
+  storageClassName: silver
+  volumeMode: Filesystem
