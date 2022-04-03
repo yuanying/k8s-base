@@ -11,8 +11,8 @@ spec:
   accessModes:
   - ReadWriteMany
   nfs:
-    path: /codimd/files
-    server: $(NFS_SERVER)
+    path: /sites/codimd/files
+    server: sites.fs.svc.cluster.local
   persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
