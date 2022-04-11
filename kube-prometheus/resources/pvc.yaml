@@ -5,7 +5,7 @@ metadata:
   name: grafana-storage
   namespace: monitoring
 spec:
-  storageClassName: "longhorn"
+  storageClassName: "bronze"
   accessModes:
     - ReadWriteOnce
   resources:
