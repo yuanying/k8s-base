@@ -1,3 +1,47 @@
+# ---
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   labels:
+#     app.kubernetes.io/name: kube-proxy
+#     app.kubernetes.io/part-of: kube-prometheus
+#   name: kube-proxy
+#   namespace: monitoring
+# spec:
+#   endpoints:
+#   - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+#     interval: 30s
+#     port: https-metrics
+#     scheme: https
+#     tlsConfig:
+#       insecureSkipVerify: true
+#   jobLabel: app.kubernetes.io/name
+#   namespaceSelector:
+#     matchNames:
+#     - kube-system
+#   selector:
+#     matchLabels:
+#       app.kubernetes.io/name: kube-proxy
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   namespace: kube-system
+#   name: kube-proxy-prometheus-discovery
+#   labels:
+#     k8s-app: kube-proxy
+#     app.kubernetes.io/name: kube-proxy
+# spec:
+#   selector:
+#     app.kubernetes.io/name: kube-proxy
+#   type: ClusterIP
+#   clusterIP: None
+#   ports:
+#   - name: https-metrics
+#     port: 10249
+#     targetPort: 10249
+#     protocol: TCP
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -8,7 +52,7 @@ metadata:
     app.kubernetes.io/name: kube-scheduler
 spec:
   selector:
-    k8s-app: kube-scheduler
+    app.kubernetes.io/name: kube-scheduler
   type: ClusterIP
   clusterIP: None
   ports:
@@ -27,7 +71,7 @@ metadata:
     app.kubernetes.io/name: kube-controller-manager
 spec:
   selector:
-    k8s-app: kube-controller-manager
+    app.kubernetes.io/name: kube-controller-manager
   type: ClusterIP
   clusterIP: None
   ports:
