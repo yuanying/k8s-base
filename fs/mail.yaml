@@ -34,6 +34,8 @@ spec:
     matchLabels:
       app: nfs
       component: mail
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -55,6 +57,7 @@ spec:
           containerPort: 111
         resources:
           requests:
+            cpu: 50m
             memory: "256Mi"
           limits:
             cpu: 500m

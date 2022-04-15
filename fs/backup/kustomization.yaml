@@ -1,0 +1,7 @@
+namespace: fs
+resources:
+- h-backup.yaml
+- sites-backup.yaml
+- mail-backup.yaml
+- data-backup.yaml
+
