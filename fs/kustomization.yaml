@@ -2,13 +2,9 @@ namespace: fs
 resources:
 - src.yaml
 - h.yaml
-- h-backup.yaml
 - sites.yaml
-- sites-backup.yaml
 - mail.yaml
-- mail-backup.yaml
 - data.yaml
-- data-backup.yaml
 
 # replacements:
 # - source:
