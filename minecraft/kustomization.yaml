@@ -4,3 +4,4 @@ resources:
 
 patchesStrategicMerge:
 - patches/bds.yaml
+- patches/svc.yaml
