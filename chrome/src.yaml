@@ -13,9 +13,9 @@ metadata:
   namespace: chrome
 spec:
   ports:
-  - port: 9222
+  - port: 80
     protocol: TCP
-    targetPort: 9222
+    targetPort: 3000
   selector:
     app: chrome
   sessionAffinity: None
@@ -46,12 +46,17 @@ spec:
       securityContext:
         fsGroup: 50
       containers:
-      - image: yukinying/chrome-headless-browser-xl:84.0.4136.5
-        imagePullPolicy: Always
+      - image: browserless/chrome:latest
+        imagePullPolicy: IfNotPresent
         name: chrome
         ports:
         - name: chrome
-          containerPort: 9222
+          containerPort: 3000
+        env:
+        - name: ENABLE_CORS
+          value: 'true'
+        - name: DEFAULT_STEALTH
+          value: 'true'
         # volumeMounts:
         # - name: tmp-data
         #   mountPath: /home/dev/tmp
