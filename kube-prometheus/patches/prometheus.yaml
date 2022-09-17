@@ -12,8 +12,7 @@ spec:
   storage:
     volumeClaimTemplate:
       spec:
-        storageClassName: "bronze"
+        storageClassName: "silver"
         resources:
           requests:
             storage: 10Gi
-
