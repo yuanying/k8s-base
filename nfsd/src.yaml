@@ -39,15 +39,11 @@ spec:
       hostNetwork: true
       nodeSelector:
         kubernetes.io/arch: amd64
-        dedicated: nfs
+        nfsd.unstable.cloud/storage: "yes"
       tolerations:
       - operator: Equal
         effect: NoSchedule
-        key: tgtd.unstable.cloud/storage
-      - operator: Equal
-        effect: NoSchedule
-        key: dedicated
-        value: nfs
+        key: unstable.cloud/storage
       serviceAccountName: nfsd
       containers:
       - name: nfsd

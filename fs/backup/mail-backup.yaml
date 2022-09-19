@@ -34,7 +34,7 @@ spec:
           - name: backup
             nfs:
               path: /mail
-              server: 192.168.1.121
+              server: 192.168.1.131
 # ---
 # apiVersion: batch/v1
 # kind: Job
