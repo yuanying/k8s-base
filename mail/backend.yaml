@@ -1,0 +1,82 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  labels:
+    app: mail
+    component: "default-backend"
+  name: default-backend
+spec:
+  rules:
+  - host: "mail.fraction.jp"
+    http:
+      paths:
+      - backend:
+          service:
+            name: default-backend
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - secretName: mail-tls
+    hosts:
+    - "mail.fraction.jp"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: default-backend
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: mail
+    component: "default-backend"
+  type: "ClusterIP"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mail
+    component: "default-backend"
+  name: default-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mail
+      component: "default-backend"
+  template:
+    metadata:
+      labels:
+        app: mail
+        component: "default-backend"
+    spec:
+      containers:
+      - name: mailserver-default-backend
+        image: "gcr.io/google_containers/defaultbackend:1.3"
+        imagePullPolicy: "IfNotPresent"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        resources:
+          # limits:
+          #   cpu: 10m
+          #   memory: 20Mi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+      terminationGracePeriodSeconds: 60

@@ -1,0 +1,7 @@
+configMapGenerator:
+- name: env
+  envs:
+  - mailserver.env
+resources:
+- deploy.yaml
+- backend.yaml
