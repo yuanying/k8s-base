@@ -6,9 +6,6 @@ metadata:
 spec:
   template:
     spec:
-      tolerations:
-      - operator: Exists
-        effect: NoSchedule
       containers:
       - name: main
         tty: true
