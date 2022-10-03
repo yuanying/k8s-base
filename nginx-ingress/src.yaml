@@ -426,10 +426,10 @@ spec:
           resources: 
             limits:
               cpu: 300m
-              memory: 256Mi
+              memory: 1Gi
             requests:
-              cpu: 100m
-              memory: 64Mi
+              cpu: 300m
+              memory: 1Gi
       nodeSelector: 
         kubernetes.io/os: linux
       serviceAccountName: ing-ingress-nginx
